@@ -1,4 +1,5 @@
 Django>=1.3
+feincms
 PIL>=1.1.7
 django-haystack>=1.2.5
 south

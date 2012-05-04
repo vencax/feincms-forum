@@ -1,0 +1,32 @@
+{% load forum_extras %}
+{% load cache %}
+{% load i18n %}
+
+{% if forum.last_post.topic %}
+	<tr {% if forum.last_post.topic|has_unreads:user %}class="inew"{% endif %}>
+{% else %}
+	<tr>
+{% endif %}
+	<td>
+		<div>
+		  <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a> 
+		  <a href="{% url djangobb:forum_forum_feed forum.id %}" class="rss icon right"></a>
+		</div>
+		{{ forum.description|safe }}				
+		{% cache 6000 moderators forum.id %}
+			{% if forum.moderator.exist %}<p>
+				{% include 'feincmsforum/moderators.html' %}
+			</p>{% endif %}
+		{% endcache %}				
+	</td>
+	<td class="tc2">{{ forum.topic_count }}</td>
+	<td class="tc3">{{ forum.post_count }}</td>
+	<td class="tcr">
+		{% if forum.updated %}
+		{% if forum.last_post.topic %}
+		<a href="{{ forum.last_post.get_absolute_url }}">{% forum_time forum.last_post.created %}</a>
+		<span class="byuser">{% trans "by" %} {{ forum.last_post.user.username }}</span>
+		{% endif %}
+		{% endif %}
+	</td>
+</tr>
