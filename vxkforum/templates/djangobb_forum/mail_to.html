@@ -1,0 +1,36 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras %}
+{% load i18n %}
+
+{% block breadcrumb %}{{ block.super }}
+<li>&raquo; <a href="{% url djangobb:index %}">{% trans 'Forums' %}</a></li>
+<li class="selected">&raquo; {% trans "Send e-mail to" %} {{ mailto }}</li>
+{% endblock %}
+
+{% block bbcontent %}
+
+<h2>{% trans "Send e-mail to" %} {{ mailto }}</h2>
+
+<div class="blockform">
+	{% trans "Write and submit your e-mail message" %}
+	<form id="email" method="post">
+		{% csrf_token %}
+		<div class="inform">
+			<div class="infldset txtarea">
+				<label>{{ form.subject.label }}<br />
+				{{ form.subject }}<br /></label>
+				<label>{{ form.body.label }}<br />
+				{{ form.body }}<br /></label>
+				<p>{% trans "Please note that by using this form, your e-mail address will be disclosed to the recipient." %}</p>
+			</div>
+		</div>
+		<input type="submit" name="submit" value="{% trans "Submit" %}" tabindex="3" 
+			accesskey="s" class="form-submit"/>
+		<a href="javascript:history.go(-1)" class="form-submit">{% trans "Go back" %}</a>
+	</form>
+</div>
+
+{% endblock %}
+
+{% block controls %}
+{% endblock %}

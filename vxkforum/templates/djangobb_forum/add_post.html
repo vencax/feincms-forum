@@ -1,0 +1,56 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras fragment_tags %}
+{% load i18n %}
+
+{% block extrahead %}
+{{ form.media }}
+<script type="text/javascript" src="{{ STATIC_URL }}djangobb_forum/js/board.js"></script>
+{% endblock %}
+
+{% block bbcontent %}
+
+{% fragment request "extrabreadcrumbs" %}
+<li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a></li>
+<li>&raquo; <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></li>
+<li class="selected">&raquo; {% trans "New reply" %}</li>
+{% endfragment %}
+
+<h1>{% trans "New reply" %}</h1>
+
+<p>{% trans "Write your message and submit" %}</p>
+
+<div class="blockform">
+	<form id="post" action="" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+
+		{{ form.body.errors }}{{ form.body }}
+
+		<p class="submit">
+			<input type="submit" value="{% trans "Submit" %}" />
+			<a href="javascript:history.go(-1)">{% trans "Go back" %}</a>
+		</p>
+	</form>
+</div>
+
+<hr />
+
+<div id="postreview" class="blockpost">
+	<h4>{% trans "Topic review (newest first)" %}</h4>
+	{% for post in posts reversed %}
+	<div class="inbox">
+		{% comment %}
+		<div><a href="javascript:pasteN('{{ post.user.username }}');">
+			{{ post.user.username }}</a> - {% forum_time post.created %}
+			<a onmouseover="copyQ('{{ post.user.username }}');" 
+				href="javascript:pasteQ();">{% trans "Quote" %}</a>
+		</div>
+		{% endcomment %}
+		
+		<div class="postmsg">{{ post.body_html|safe }}</div>
+		
+		<div class="clearer"></div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras applicationcontent_tags fragment_tags %}
+{% load i18n %}
+
+{% block bbcontent %}
+
+{% fragment request "extrabreadcrumbs" %}
+<li class="selected">&raquo; {{ forum.name }}</li>
+{% endfragment %}
+
+{% fragment request "title" %}{{ forum.name }}{% endfragment %}
+{% fragment request "keywords" %}{{ forum.name }}{% endfragment %}
+{% fragment request "description" %}{{ forum.description}}{% endfragment %}
+
+<div class="right">
+	<ul class="rhorizList">
+		<li><a href="{% url djangobb:forum_forum_feed forum.id %}" class="icon rss"></a></li>
+		{% if user.is_authenticated %}
+		{% app_reverse "add_topic" "vxkforum.urls" forum.id as addTopicURL %}
+		<li class="submit"><a href="{{ addTopicURL }}">
+			{% trans "New topic" %}
+		</a></li>
+		{% endif %}
+	</ul>
+</div>
+
+<h1>{{ forum.name }}</h1>
+
+<div id="vf" class="blocktable">
+	<div>{% pagination %}</div>	
+	<div class="inbox">
+		<table>
+		  <thead>
+			<tr>
+				<th class="tcl" scope="col">{% trans "Topic" %}</th>
+				<th class="tc2" scope="col">{% trans "Replies" %}</th>
+				<th class="tc3" scope="col">{% trans "Views" %}</th>
+				<th class="tcr" scope="col">{% trans "Last post" %}</th>
+			</tr>
+		  </thead>
+		<tbody>
+		{% if topics %}
+			{% for topic in topics %}
+				<tr>
+					<td>
+						<div class="licon {% if topic.sticky %}sticky{% else %}{% if topic.closed %}closed{% else %}{% if topic|has_unreads:user %}inew{% else %}regular{% endif %}{% endif %}{% endif %}">					
+						  {% if topic.sticky %}{% trans "Sticky:" %}{% endif %}
+						  <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a>
+						  <span class="byuser">{% trans "by" %} {{ topic.user.username }}</span>
+						</div>
+					</td>
+					<td class="tc2">{{ topic.reply_count }}</td>
+					<td class="tc3">{{ topic.views }}</td>
+					<td class="tcr">
+					  <a href="{{ topic.last_post.get_absolute_url }}">{% forum_time topic.updated %}</a>
+					  <span class="byuser">{% trans "by" %} {{ topic.last_post.user.username }}</span>
+					</td>
+				</tr>
+			{% endfor %}
+		{% else %}
+			<tr><td class="djangobbcon1" colspan="4">{% trans "Forum is empty." %}</td></tr>
+		{% endif %}
+		</tbody>
+		</table>
+	</div>
+	<div>{% pagination %}</div>
+</div>
+
+{% endblock %}
+
+{% block controls %}
+<div class="conl">
+	<form id="qjump" method="get" action="forum">
+		<div><label>{% trans "Jump to" %}
+		<br />
+		<select name="id" id="forum_id" onchange="window.location=('{% url djangobb:index %}'+this.options[this.selectedIndex].value)">
+			{% for category in categories %}
+				<optgroup label="{{ category }}">
+					{% for forum in category.forums.all %}
+						<option value="{{ forum.id }}">{{ forum.name }}</option>
+					{% endfor %}
+				</optgroup>
+			{% endfor %}
+		</select>
+		<input type="button" onclick="window.location=('{% url djangobb:index %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
+		</label></div>
+	</form>
+	{% if moderator %}
+		<p id="modcontrols"><a href="{% url djangobb:moderate forum.id %}">{% trans "Moderate forum" %}</a></p>
+	{% endif %}
+</div>
+{% endblock %}

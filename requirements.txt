@@ -1,0 +1,7 @@
+Django>=1.3
+PIL>=1.1.7
+django-haystack>=1.2.5
+south
+git+git://github.com/dwaiter/django-ckeditor.git
+git+git://github.com/nvie/django-gravatar.git
+-e svn+http://postmarkup.googlecode.com/svn/trunk/#egg=postmarkup

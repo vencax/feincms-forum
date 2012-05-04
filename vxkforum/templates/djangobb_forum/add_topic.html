@@ -1,0 +1,25 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras fragment_tags %}
+{% load i18n %}
+
+{% block bbcontent %}
+
+{% fragment request "extrabreadcrumbs" %}
+<li>&raquo; <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a></li>
+<li class="selected">&raquo; {% trans "New topic" %}</li>
+{% endfragment %}
+
+<h2>{% trans "New topic" %}</h2>
+
+<div class="blockform">
+	<form id="post" action="" method="post">
+		{% csrf_token %}
+		<table>
+		{{ form.as_table }}
+		</table>
+		<p class="submit"><input type="submit" value="{% trans "Submit" %}" />
+		<a href="javascript:history.go(-1)">{% trans "Go back" %}</a></p>
+	</form>
+</div>
+
+{% endblock %}

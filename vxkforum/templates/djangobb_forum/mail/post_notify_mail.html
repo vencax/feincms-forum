@@ -1,0 +1,8 @@
+{% load i18n %}
+
+{% blocktrans %}New reply from {{ username }} to topic that you have subscribed on{% endblocktrans %}.
+---
+{{ message }}
+---
+{% trans "See topic" %}: {{ post_url }}
+{% trans "Unsubscribe" %} {{ unsubscribe_url }}

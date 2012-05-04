@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<h3>{% trans 'Newest topics in forums' %}:</h3>
+<ul class="newesttopics">
+{% for t in topics %}
+<li><a href="{{ t.get_absolute_url }}">{{ t.name }}</a></li>
+{% endfor %}
+</ul>

@@ -1,0 +1,47 @@
+{% load i18n forum_extras gravatar %}
+<div class="postleft">
+	<div>
+	  <a href="javascript:pasteN('{{ post.user.username }}');">
+		{{ post.user.username }}</a> (
+		{% if post.user|online %}
+		{% trans "Online" %}
+		{% else %}
+		{% trans "Offline" %}
+		{% endif %})
+	</div>
+	<dl>
+		<dd class="usertitle">
+			{% if post.user.forum_profile.status %}
+			{{ post.user.forum_profile.status }}
+			{% else %}
+			{{ post.user.forum_profile.group }}
+			{% endif %}
+		</dd>
+		<dd class="postavatar">
+			<img src="{% gravatar_for_user post.user 70 %}" 
+				alt="avatar img" class="avatar" />
+		</dd>
+		
+		<dd class="authority">{{ post.user|forum_authority }}</dd>
+		
+		{% if post.user.forum_profile.location %}
+		<dd>{% trans "From:" %} {{ post.user.forum_profile.location }}</dd>
+		{% endif %}
+		
+		<dd>{% trans "Registered:" %} {{ post.user.date_joined|date:"d.m.Y" }}</dd>
+		<dd>{% trans "Posts:" %} {{ post.user.forum_profile.post_count }}</dd>
+		{% if moderator %}
+			<dd>{% trans "IP:" %} {{ post.user_ip }}</dd>
+		{% endif %}
+		{{ post.user.forum_profile.reply_total }}
+		{% comment %}
+		<dd class="usercontacts">
+			<a href="{% url djangobb:forum_profile post.user.username %}" class="form-submit">
+			  {% trans "Profile" %}</a>
+		{% endcomment %}
+	</dl>
+	<div class="submit">
+		<a href="{% url djangobb:mailto post.user.username %}">
+			{% trans "Send e-mail" %}</a>
+	</div>
+</div>

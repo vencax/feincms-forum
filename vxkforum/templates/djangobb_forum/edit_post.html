@@ -1,0 +1,35 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras fragment_tags %}
+{% load i18n %}
+
+{% block bbcontent %}
+
+{% fragment request "extrabreadcrumbs" %}
+<li>&raquo; <a href="{{ post.topic.forum.get_absolute_url }}">{{ post.topic.forum.name }}</a></li>
+<li>&raquo; <a href="{{ post.topic.get_absolute_url }}">{{ post.topic.name }}</a></li>
+<li class="selected">&raquo; {% trans "Edit post" %}</li>
+{% endfragment %}
+
+<h2>{% trans "Edit post" %}</h2>
+
+<div class="blockform">
+	<form method="post">
+		{% csrf_token %}
+		<fieldset>
+			<legend>{% trans "Edit the post and submit changes" %}</legend>
+			<div class="infldset txtarea">
+				{% if post.id == post.topic.head.id %}
+				<label>{% trans "Subject" %}<br />
+				{{ form.name }}<br /></label>
+				{% endif %}
+				<label>{% trans "Message" %}<br />
+				{{ form.body }}
+				<br /></label>
+			</div>
+		</fieldset>
+
+		<input type="submit" value="{% trans "Save" %}" class="form-submit" />
+		<a href="javascript:history.go(-1)" class="form-submit">{% trans "Go back" %}</a>
+	</form>
+</div>
+{% endblock %}

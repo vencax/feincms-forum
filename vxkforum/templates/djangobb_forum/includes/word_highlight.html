@@ -1,0 +1,9 @@
+<!-- Highlightjs goodies -->
+{% if highlight_word %}
+	<script type="text/javascript" src="{{ STATIC_URL }}djangobb_forum/js/jquery.highlight-3.pack.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("div.postmsg").highlight("{{ highlight_word }}");
+		});
+	</script>
+{% endif %}

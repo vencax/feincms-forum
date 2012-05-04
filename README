@@ -1,0 +1,71 @@
+Introduction
+==============
+
+Vxkforum is clone of djangoBB app which aims to be 'I know everithing' application. 
+I needed only forum functionality that can be easily integrated into existing
+django site. I tried to strip the djangoBB down and wanted to push the changes to
+original authors but found that original code is tightly coupled with the whole
+functionality so I decided to rework it almost completely.
+
+Installation
+==============
+
+1. Clone the read-only repo
+
+     git clone git@github.com:vencax/django-vxk-forum.git
+
+2. Install the dependencies via PIP.
+
+     pip install -r requirements.txt
+
+3. Add vxkforum into your INSTALLED_APPS as well as other dependant apps.
+
+4. Include vxkforum.urls into your root url conf
+
+     url(r'^forum/', include('vxkforum.urls', namespace='djangobb')),
+     
+NOTE: DO NOT FORGET to add the "namespace='djangobb'"
+     
+5. Add template conent processor and middleware in settings
+		
+		TEMPLATE_CONTEXT_PROCESSORS += (
+			'vxkforum.context_processors.forum_settings',
+		)
+		
+		MIDDLEWARE_CLASSES += (
+			'vxkforum.middleware.LastLoginMiddleware',
+		)
+		
+6. Add CKEditor configs into settings
+
+		CKEDITOR_CONFIGS = {
+		    'default': {
+		        'toolbar': 'Full',
+		        'toolbarCanCollapse': False,
+		    },
+		    'bbcode': {
+		        'extraPlugins' : 'bbcode',
+		        'toolbar': [
+		            [      'Undo', 'Redo',
+		              '-', 'Bold', 'Italic', 'Underline',
+		              '-', 'Link', 'Unlink', 'Anchor',
+		              '-', 'Format',
+		              '-', 'SpellChecker', 'Scayt',
+		              '-', 'Maximize',
+		            ],
+		            [      'HorizontalRule',
+		              '-', 'Table',
+		              '-', 'BulletedList', 'NumberedList',
+		              '-', 'Cut','Copy','Paste','PasteText','PasteFromWord',
+		              '-', 'SpecialChar', 'Blockquote',
+		              '-', 'Image', 'Source',
+		            ]
+		        ],
+		        'width': 900,
+		        'toolbarCanCollapse': False,
+		    }
+		}
+		
+7. You are done
+
+

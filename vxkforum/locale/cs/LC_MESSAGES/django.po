@@ -1,0 +1,1230 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: DjangoBB\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-23 09:35+0100\n"
+"PO-Revision-Date: 2011-03-22 15:09+0000\n"
+"Last-Translator: ondra_kosik <ondra.kosik@gmail.com>\n"
+"Language-Team: Czech <None>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2\n"
+
+#: cms_app.py:7
+msgid "Forum application"
+msgstr "Aplykikace Fóra"
+
+#: feeds.py:24 feeds.py:25 templates/djangobb_forum/base.html:15
+msgid "Latest posts on forum"
+msgstr "Poslední příspěvky na fóru"
+
+#: feeds.py:43 feeds.py:44 templates/djangobb_forum/base.html:16
+msgid "Latest topics on forum"
+msgstr "Poslední témata na fóru"
+
+#: feeds.py:72 feeds.py:80
+#, python-format
+msgid "Latest posts on %s topic"
+msgstr "Poslední příspěvky v tématu %s"
+
+#: feeds.py:97 feeds.py:105
+#, python-format
+msgid "Latest posts on %s forum"
+msgstr "Poslední příspěvky na fóru %s"
+
+#: feeds.py:122 feeds.py:125
+#, python-format
+msgid "Latest posts on %s category"
+msgstr "Poslední příspěvky v kategorii %s"
+
+#: forms.py:11
+msgid "Username"
+msgstr "Uživatelské jméno"
+
+#: forms.py:12
+msgid "Registered"
+msgstr "Registrovaný"
+
+#: forms.py:13
+msgid "No. of posts"
+msgstr "Počet příspěvků"
+
+#: forms.py:17
+msgid "Post time"
+msgstr "Čas odeslání"
+
+#: forms.py:18
+msgid "Author"
+msgstr "Autor"
+
+#: forms.py:19 forms.py:80 forms.py:90 forms.py:205 models.py:106
+#: templates/djangobb_forum/edit_post.html:23
+msgid "Subject"
+msgstr "Předmět"
+
+#: forms.py:20 forms.py:197 models.py:69 models.py:105
+#: templates/djangobb_forum/index.html:56
+msgid "Forum"
+msgstr "Fórum"
+
+#: forms.py:24
+msgid "Ascending"
+msgstr "Vzestupně"
+
+#: forms.py:25
+msgid "Descending"
+msgstr "Sestupně"
+
+#: forms.py:29 models.py:119 templates/djangobb_forum/index.html:57
+msgid "Topics"
+msgstr "Témata"
+
+#: forms.py:30 models.py:182 templates/djangobb_forum/index.html:58
+msgid "Posts"
+msgstr "Příspěvky"
+
+#: forms.py:34
+msgid "Message text and topic subject"
+msgstr "Text a předmět zprávy"
+
+#: forms.py:35
+msgid "Message text only"
+msgstr "Pouze text"
+
+#: forms.py:36
+msgid "Topic subject only"
+msgstr "Pouze předmět"
+
+#: forms.py:58
+msgid "Can't be empty nor contain only whitespace characters"
+msgstr "Nemůže být prázdný nebo obsahovat mezery"
+
+#: forms.py:142
+msgid "Real name"
+msgstr "Pravé jméno"
+
+#: forms.py:193
+msgid "Keyword search"
+msgstr "Hledání podle klíčového slova"
+
+#: forms.py:195
+msgid "Author search"
+msgstr "Hledání podle autora"
+
+#: forms.py:198
+msgid "Search in"
+msgstr "Vyhledávat v"
+
+#: forms.py:199
+msgid "Sort by"
+msgstr "Třídit podle"
+
+#: forms.py:200
+msgid "Sort order"
+msgstr "Pořadí třídění"
+
+#: forms.py:201
+msgid "Show results as"
+msgstr "Zobrazit výsledky jako"
+
+#: forms.py:208 models.py:174 templates/djangobb_forum/edit_post.html:26
+msgid "Message"
+msgstr "Zpráva"
+
+#: models.py:24 models.py:61
+msgid "Name"
+msgstr "Jméno"
+
+#: models.py:26
+msgid "Groups"
+msgstr "Skupiny"
+
+#: models.py:27
+msgid "Only users from these groups can see this category"
+msgstr "Pouze uživatele z těchto skupin mohou vidět tuto kategorii"
+
+#: models.py:28 models.py:62
+msgid "Position"
+msgstr "Pozice"
+
+#: models.py:32 models.py:60
+msgid "Category"
+msgstr "Kategorie"
+
+#: models.py:33
+msgid "Categories"
+msgstr "Kategorie"
+
+#: models.py:63
+msgid "Description"
+msgstr "Popis"
+
+#: models.py:64
+msgid "Moderators"
+msgstr "Moderátoři"
+
+#: models.py:65 models.py:108 models.py:172
+msgid "Updated"
+msgstr "Aktualizováno"
+
+#: models.py:70 templates/djangobb_forum/add_post.html:6
+#: templates/djangobb_forum/add_topic.html:6
+#: templates/djangobb_forum/delete_posts.html:6
+#: templates/djangobb_forum/edit_post.html:6
+#: templates/djangobb_forum/forum.html:6 templates/djangobb_forum/index.html:6
+#: templates/djangobb_forum/index.html:45
+#: templates/djangobb_forum/mail_to.html:6
+#: templates/djangobb_forum/report.html:6
+#: templates/djangobb_forum/topic.html:12
+msgid "Forums"
+msgstr "Fórum"
+
+#: models.py:107 models.py:171 models.py:280
+msgid "Created"
+msgstr "Vytvořeno"
+
+#: models.py:109 models.py:170 models.py:207
+msgid "User"
+msgstr "Uživatel"
+
+#: models.py:110
+msgid "Views count"
+msgstr "Počet shlédnutí"
+
+#: models.py:111
+msgid "Sticky"
+msgstr "Zvýrazněno"
+
+#: models.py:112
+msgid "Closed"
+msgstr "Uzavřeno"
+
+#: models.py:114
+msgid "Subscribers"
+msgstr "Odběratelé"
+
+#: models.py:118 models.py:169 templates/djangobb_forum/forum.html:33
+#: templates/djangobb_forum/moderate.html:23
+msgid "Topic"
+msgstr "Téma"
+
+#: models.py:173
+msgid "Updated by"
+msgstr "Aktualizováno od"
+
+#: models.py:175
+msgid "HTML version"
+msgstr "Verze s HTML"
+
+#: models.py:176
+msgid "User IP"
+msgstr "Uživatelova IP adresa"
+
+#: models.py:181 models.py:276
+msgid "Post"
+msgstr "Příspěvek"
+
+#: models.py:208
+msgid "Status"
+msgstr "Stav zprávy:"
+
+#: models.py:209
+msgid "Site"
+msgstr "Web"
+
+#: models.py:210
+msgid "Jabber"
+msgstr "Jabber"
+
+#: models.py:211
+msgid "ICQ"
+msgstr "ICQ"
+
+#: models.py:212
+msgid "MSN"
+msgstr "MSN"
+
+#: models.py:213
+msgid "AIM"
+msgstr "AIM"
+
+#: models.py:214
+msgid "Yahoo"
+msgstr "Yahoo"
+
+#: models.py:215 templates/djangobb_forum/user.html:25
+msgid "Location"
+msgstr "Místo"
+
+#: models.py:216
+msgid "Signature"
+msgstr "Podpis"
+
+#: models.py:218
+msgid "Language"
+msgstr "Jazyk"
+
+#: models.py:220
+msgid "Show signatures"
+msgstr "Zobrazit podpisy"
+
+#: models.py:222
+msgid "Post count"
+msgstr "Počet příspěvků"
+
+#: models.py:225 templates/djangobb_forum/user.html:7
+msgid "Profile"
+msgstr "Profil"
+
+#: models.py:226
+msgid "Profiles"
+msgstr "Profily"
+
+#: models.py:247 models.py:248
+msgid "Post tracking"
+msgstr "Sledování příspěvků"
+
+#: models.py:254
+msgid "spam"
+msgstr "spam"
+
+#: models.py:255
+msgid "rude posts"
+msgstr "Hrubé příspěvky"
+
+#: models.py:260
+msgid "Banned user"
+msgstr "Zakázaný uživatel"
+
+#: models.py:262 models.py:281 templates/djangobb_forum/report.html:21
+msgid "Reason"
+msgstr "Důvod"
+
+#: models.py:266
+msgid "Ban"
+msgstr "Ban"
+
+#: models.py:267
+msgid "Bans"
+msgstr "Bans"
+
+#: models.py:275
+msgid "Reported by"
+msgstr "Nahlášeno od"
+
+#: models.py:277
+msgid "Zapped"
+msgstr "Přepnuto"
+
+#: models.py:279
+msgid "Zapped by"
+msgstr "Přepnuto od"
+
+#: models.py:285 templates/djangobb_forum/topic.html:72
+msgid "Report"
+msgstr "Report"
+
+#: models.py:286
+msgid "Reports"
+msgstr "Reporty"
+
+#: views.py:263
+msgid "write here"
+msgstr "Sem napište text"
+
+#: templates/djangobb_forum/add_post.html:9
+#: templates/djangobb_forum/add_post.html:19
+msgid "New reply"
+msgstr "Odpovědět"
+
+#: templates/djangobb_forum/add_post.html:19
+#: templates/djangobb_forum/add_topic.html:8
+#: templates/djangobb_forum/add_topic.html:13
+#: templates/djangobb_forum/forum.html:19
+msgid "New topic"
+msgstr "Založit nové téma"
+
+#: templates/djangobb_forum/add_post.html:21
+msgid "Write your message and submit"
+msgstr "Napište svojí zprávu a odešlete"
+
+#: templates/djangobb_forum/add_post.html:30
+#: templates/djangobb_forum/add_topic.html:21
+#: templates/djangobb_forum/mail_to.html:27
+#: templates/djangobb_forum/report.html:26
+#: templates/djangobb_forum/topic.html:120
+#: templates/djangobb_forum/profile/profile_display.html:45
+#: templates/djangobb_forum/profile/profile_essentials.html:81
+#: templates/djangobb_forum/profile/profile_messaging.html:30
+#: templates/djangobb_forum/profile/profile_personal.html:31
+#: templates/djangobb_forum/profile/profile_personality.html:54
+#: templates/djangobb_forum/profile/profile_privacy.html:25
+msgid "Submit"
+msgstr "Odeslat"
+
+#: templates/djangobb_forum/add_post.html:31
+#: templates/djangobb_forum/add_topic.html:22
+#: templates/djangobb_forum/edit_post.html:33
+#: templates/djangobb_forum/mail_to.html:29
+#: templates/djangobb_forum/move_topic.html:34
+#: templates/djangobb_forum/report.html:28
+msgid "Go back"
+msgstr "Zpět"
+
+#: templates/djangobb_forum/add_post.html:39
+msgid "Topic review (newest first)"
+msgstr "Přehled tématu (nejnovější první)"
+
+#: templates/djangobb_forum/delete_posts.html:9
+#: templates/djangobb_forum/delete_posts.html:14
+msgid "Delete post"
+msgstr "Odstranit příspěvky"
+
+#: templates/djangobb_forum/delete_posts.html:37
+#: templates/djangobb_forum/topic.html:64
+msgid "Edited"
+msgstr "Upraveno"
+
+#: templates/djangobb_forum/delete_posts.html:41
+#: templates/djangobb_forum/moderate.html:27
+msgid "Select"
+msgstr "Zobrazit"
+
+#: templates/djangobb_forum/delete_posts.html:53
+#: templates/djangobb_forum/moderate.html:68
+#: templates/djangobb_forum/topic.html:79
+msgid "Delete"
+msgstr "Smazat"
+
+#: templates/djangobb_forum/edit_post.html:9
+#: templates/djangobb_forum/edit_post.html:14
+msgid "Edit post"
+msgstr "Editovat příspěvek"
+
+#: templates/djangobb_forum/edit_post.html:20
+msgid "Edit the post and submit changes"
+msgstr "Editujte příspěvek a uložte změny"
+
+#: templates/djangobb_forum/edit_post.html:32
+msgid "Save"
+msgstr "Uložit"
+
+#: templates/djangobb_forum/forum.html:34
+#: templates/djangobb_forum/moderate.html:24
+msgid "Replies"
+msgstr "Odpovědi"
+
+#: templates/djangobb_forum/forum.html:35
+#: templates/djangobb_forum/moderate.html:25
+msgid "Views"
+msgstr "Zobrazení"
+
+#: templates/djangobb_forum/forum.html:36
+#: templates/djangobb_forum/index.html:59
+#: templates/djangobb_forum/moderate.html:26
+msgid "Last post"
+msgstr "Poslední příspěvek"
+
+#: templates/djangobb_forum/forum.html:45
+#: templates/djangobb_forum/moderate.html:39
+msgid "Sticky:"
+msgstr "Zvýrazněno:"
+
+#: templates/djangobb_forum/forum.html:47
+#: templates/djangobb_forum/forum.html:54
+#: templates/djangobb_forum/forum_row.html:28
+#: templates/djangobb_forum/moderate.html:42
+#: templates/djangobb_forum/moderate.html:44
+#: templates/djangobb_forum/moderate.html:51
+msgid "by"
+msgstr "od"
+
+#: templates/djangobb_forum/forum.html:59
+#: templates/djangobb_forum/moderate.html:56
+msgid "Forum is empty."
+msgstr "Fórum je prázdné"
+
+#: templates/djangobb_forum/forum.html:72
+msgid "Jump to"
+msgstr "Přejít na"
+
+#: templates/djangobb_forum/forum.html:83
+#: templates/djangobb_forum/topic.html:137
+msgid "Go"
+msgstr "Přejít"
+
+#: templates/djangobb_forum/forum.html:87
+msgid "Moderate forum"
+msgstr "Moderovat fórum"
+
+#: templates/djangobb_forum/index.html:74
+msgid "Board information"
+msgstr "Informace o fóru"
+
+#: templates/djangobb_forum/index.html:77
+msgid "Board statistics"
+msgstr "Statistika fóra"
+
+#: templates/djangobb_forum/index.html:78
+msgid "Total number of registered users:"
+msgstr "Celkem registrovaných uživatelů:"
+
+#: templates/djangobb_forum/index.html:79
+msgid "Total number of topics:"
+msgstr "Témat:"
+
+#: templates/djangobb_forum/index.html:80
+msgid "Total number of posts:"
+msgstr "Příspěvků:"
+
+#: templates/djangobb_forum/index.html:83
+msgid "User information"
+msgstr "Informace o uživateli"
+
+#: templates/djangobb_forum/index.html:84
+msgid "Newest registered user:"
+msgstr "Nejnovější registrovaný uživatel:"
+
+#: templates/djangobb_forum/index.html:85
+msgid "Registered users online:"
+msgstr "Registrovaní uživatelé online:"
+
+#: templates/djangobb_forum/index.html:86
+msgid "Guests online:"
+msgstr "Hosté online:"
+
+#: templates/djangobb_forum/index.html:90
+msgid "Online:"
+msgstr "Online:"
+
+#: templates/djangobb_forum/mail_to.html:7
+#: templates/djangobb_forum/mail_to.html:12
+msgid "Send e-mail to"
+msgstr "Poslat e-mail"
+
+#: templates/djangobb_forum/mail_to.html:15
+msgid "Write and submit your e-mail message"
+msgstr "Napište a odešlete Vaši e-mailovou zprávu."
+
+#: templates/djangobb_forum/mail_to.html:24
+msgid ""
+"Please note that by using this form, your e-mail address will be disclosed "
+"to the recipient."
+msgstr ""
+"Pokud použijete tento formulář, Vaše e-mailová adresa bude pro příjemce "
+"zobrazena."
+
+#: templates/djangobb_forum/moderate.html:9
+msgid "Root"
+msgstr "Kořen"
+
+#: templates/djangobb_forum/moderate.html:67
+#: templates/djangobb_forum/move_topic.html:34
+msgid "Move"
+msgstr "Přesunout"
+
+#: templates/djangobb_forum/moderate.html:69
+msgid "Open"
+msgstr "Otevřít"
+
+#: templates/djangobb_forum/moderate.html:70
+msgid "Close"
+msgstr "Zavřít"
+
+#: templates/djangobb_forum/moderators.html:3
+msgid "Moderated by"
+msgstr "Moderuje"
+
+#: templates/djangobb_forum/move_topic.html:7
+#: templates/djangobb_forum/topic.html:142
+msgid "Move topic"
+msgstr "Přesunout téma"
+
+#: templates/djangobb_forum/move_topic.html:16
+msgid "Select destination of move"
+msgstr "Vybrat cíl přesunu"
+
+#: templates/djangobb_forum/move_topic.html:18
+msgid "Move to"
+msgstr "Přesunout do"
+
+#: templates/djangobb_forum/pagination.html:3
+msgid "Pages"
+msgstr "Stránky"
+
+#: templates/djangobb_forum/report.html:7
+#: templates/djangobb_forum/report.html:12
+msgid "Report post"
+msgstr "Nahlásit příspěvek"
+
+#: templates/djangobb_forum/report.html:15
+msgid "Please enter a short reason why you are reporting this post"
+msgstr "Prosím napište stručně, proč upozorňujete na tento příspěvek."
+
+#: templates/djangobb_forum/tag_newesttopics.html:3
+msgid "Newest topics in forums"
+msgstr "Poslední témata na fóru"
+
+#: templates/djangobb_forum/topic.html:24
+#: templates/djangobb_forum/topic.html:85
+msgid "Reply"
+msgstr "Odpovědět"
+
+#: templates/djangobb_forum/topic.html:29
+#: templates/djangobb_forum/mail/post_notify_mail.html:8
+msgid "Unsubscribe"
+msgstr "Neodebírat"
+
+#: templates/djangobb_forum/topic.html:32
+msgid "Subscribe"
+msgstr "Odebírat"
+
+msgid "SubscribeHelp"
+msgstr "Přihlásit k odběru příspěvků v tomto tématu."
+
+#: templates/djangobb_forum/topic.html:77
+msgid "Are you sure you want to delete this post?"
+msgstr "POZOR! Pokud je toto první příspěvek v tématu, téma bude SMAZÁNO!"
+
+#: templates/djangobb_forum/topic.html:113
+msgid "Quick post"
+msgstr "Rychlá odpověď"
+
+#: templates/djangobb_forum/topic.html:127
+msgid "Jump to "
+msgstr "Přejít na"
+
+#: templates/djangobb_forum/topic.html:141
+msgid "Moderator control"
+msgstr "Moderátorské ovládání"
+
+#: templates/djangobb_forum/topic.html:144
+msgid "Open topic"
+msgstr "Otevřít téma"
+
+#: templates/djangobb_forum/topic.html:146
+msgid "Close topic"
+msgstr "Zavřít téma"
+
+#: templates/djangobb_forum/topic.html:149
+msgid "Unstick topic"
+msgstr "Zrušit zvýraznění"
+
+#: templates/djangobb_forum/topic.html:151
+msgid "Stick topic"
+msgstr "Zvýraznit téma"
+
+#: templates/djangobb_forum/user.html:12
+#: templates/djangobb_forum/profile/profile_menu.html:8
+#: templates/djangobb_forum/profile/profile_messaging.html:15
+#: templates/djangobb_forum/profile/profile_personal.html:9
+msgid "Personal"
+msgstr "Osobní"
+
+#: templates/djangobb_forum/user.html:15
+msgid "Username:"
+msgstr "Uživatelské jméno"
+
+#: templates/djangobb_forum/user.html:17
+msgid "Title"
+msgstr "Titulek"
+
+#: templates/djangobb_forum/user.html:19
+msgid "Real name:"
+msgstr "Skutečné jméno:"
+
+#: templates/djangobb_forum/user.html:23 templates/djangobb_forum/user.html:29
+#: templates/djangobb_forum/user.html:35 templates/djangobb_forum/user.html:61
+#: templates/djangobb_forum/user.html:67 templates/djangobb_forum/user.html:73
+#: templates/djangobb_forum/user.html:79 templates/djangobb_forum/user.html:85
+#: templates/djangobb_forum/user.html:107
+#: templates/djangobb_forum/user.html:125
+msgid "(Unknown)"
+msgstr "(Neznámý)"
+
+#: templates/djangobb_forum/user.html:31
+msgid "Website:"
+msgstr "Web:"
+
+#: templates/djangobb_forum/user.html:37
+msgid "E-mail:"
+msgstr "E-mail"
+
+#: templates/djangobb_forum/user.html:42
+#: templates/djangobb_forum/includes/post_info.html:46
+#: templates/djangobb_forum/profile/profile_essentials.html:43
+msgid "Send e-mail"
+msgstr "Poslat e-mail"
+
+#: templates/djangobb_forum/user.html:44
+msgid "(Hidden)"
+msgstr "(Skryté)"
+
+#: templates/djangobb_forum/user.html:54
+#: templates/djangobb_forum/profile/profile_menu.html:9
+#: templates/djangobb_forum/profile/profile_messaging.html:9
+msgid "Messaging"
+msgstr "Komunikace"
+
+#: templates/djangobb_forum/user.html:57
+msgid "Jabber:"
+msgstr "Jabber:"
+
+#: templates/djangobb_forum/user.html:63
+msgid "ICQ:"
+msgstr "ICQ:"
+
+#: templates/djangobb_forum/user.html:69
+msgid "MSN Messenger:"
+msgstr "MSN Messenger:"
+
+#: templates/djangobb_forum/user.html:75
+msgid "AOL IM:"
+msgstr "AOL IM:"
+
+#: templates/djangobb_forum/user.html:81
+msgid "Yahoo! Messenger:"
+msgstr "Yahoo! Messenger:"
+
+#: templates/djangobb_forum/user.html:94
+#: templates/djangobb_forum/profile/profile_menu.html:10
+#: templates/djangobb_forum/profile/profile_personality.html:9
+msgid "Personality"
+msgstr "Identifikace"
+
+#: templates/djangobb_forum/user.html:97
+msgid "Avatar:"
+msgstr "Avatar:"
+
+#: templates/djangobb_forum/user.html:101
+msgid "(No avatar)"
+msgstr "(No avatar)"
+
+#: templates/djangobb_forum/user.html:103
+msgid "Signature:"
+msgstr "Podpis:"
+
+#: templates/djangobb_forum/user.html:116
+#: templates/djangobb_forum/profile/profile_essentials.html:71
+msgid "User activity"
+msgstr "Uživatelovy aktivity"
+
+#: templates/djangobb_forum/user.html:119
+#: templates/djangobb_forum/includes/post_info.html:32
+#: templates/djangobb_forum/profile/profile_essentials.html:75
+msgid "Posts:"
+msgstr "Příspěvky:"
+
+#: templates/djangobb_forum/user.html:120
+#: templates/djangobb_forum/profile/profile_essentials.html:76
+msgid "Show all posts"
+msgstr "Zobrazit všechny příspěvky"
+
+#: templates/djangobb_forum/user.html:121
+#: templates/djangobb_forum/profile/profile_essentials.html:74
+msgid "Last post:"
+msgstr "Poslední příspěvek:"
+
+#: templates/djangobb_forum/user.html:127
+#: templates/djangobb_forum/includes/post_info.html:31
+#: templates/djangobb_forum/profile/profile_essentials.html:73
+msgid "Registered:"
+msgstr "Registrovaný:"
+
+#: templates/djangobb_forum/includes/post_info.html:8
+msgid "Online"
+msgstr "Online"
+
+#: templates/djangobb_forum/includes/post_info.html:10
+msgid "Offline"
+msgstr "Offline"
+
+#: templates/djangobb_forum/includes/post_info.html:28
+msgid "From:"
+msgstr "Od:"
+
+#: templates/djangobb_forum/includes/post_info.html:34
+msgid "IP:"
+msgstr "IP:"
+
+#: templates/djangobb_forum/mail/post_notify_mail.html:3
+#, python-format
+msgid "New reply from %(username)s to topic that you have subscribed on"
+msgstr ""
+
+#: templates/djangobb_forum/mail/post_notify_mail.html:7
+msgid "See topic"
+msgstr "Koukněte na téma"
+
+#: templates/djangobb_forum/profile/profile_admin.html:9
+#: templates/djangobb_forum/profile/profile_menu.html:14
+msgid "Administration"
+msgstr "Administrace"
+
+#: templates/djangobb_forum/profile/profile_admin.html:16
+msgid "Delete (administrators only) or ban user"
+msgstr "Odstranit (pouze pro správce), nebo zakázat uživatele"
+
+#: templates/djangobb_forum/profile/profile_admin.html:18
+msgid "Delete user"
+msgstr "Odstranit uživatele"
+
+#: templates/djangobb_forum/profile/profile_admin.html:18
+msgid "Ban user"
+msgstr "Zakázat uživatele"
+
+#: templates/djangobb_forum/profile/profile_admin.html:25
+msgid "Set moderator access"
+msgstr "Nastavit moderátorský přístup"
+
+#: templates/djangobb_forum/profile/profile_admin.html:27
+msgid ""
+"Choose what forums this user should be allowed to moderate. Note: This only "
+"applies to moderators. Administrators always have full permissions in all "
+"forums."
+msgstr ""
+"Vyberte, která fóra může tento uživatel moderovat. Poznámka: Toto se "
+"vztahuje pouze na moderátory. Administrátoři mají vždy plná oprávnění ve "
+"všech fórech."
+
+#: templates/djangobb_forum/profile/profile_admin.html:31
+msgid "Update forums"
+msgstr "Update fóra"
+
+#: templates/djangobb_forum/profile/profile_display.html:9
+#: templates/djangobb_forum/profile/profile_menu.html:11
+msgid "Display"
+msgstr "Zobrazení"
+
+#: templates/djangobb_forum/profile/profile_display.html:15
+msgid "Select your preferred style"
+msgstr "Vyberte si preferovaný styl"
+
+#: templates/djangobb_forum/profile/profile_display.html:18
+msgid "If you like you can use a different visual style for this forum."
+msgstr "Pokud chcete, můžete použít jiný vizuální styl na tomto fóru."
+
+#: templates/djangobb_forum/profile/profile_display.html:25
+msgid "Markup"
+msgstr "Značkování"
+
+#: templates/djangobb_forum/profile/profile_display.html:35
+msgid "Post display legend"
+msgstr "Zobrazit vysvětlivky"
+
+#: templates/djangobb_forum/profile/profile_display.html:37
+msgid "Post display info"
+msgstr "Zobrazení informací"
+
+#: templates/djangobb_forum/profile/profile_display.html:40
+msgid "Show smilies"
+msgstr "Zobrazit smajlíky"
+
+#: templates/djangobb_forum/profile/profile_display.html:45
+#: templates/djangobb_forum/profile/profile_essentials.html:81
+#: templates/djangobb_forum/profile/profile_messaging.html:30
+#: templates/djangobb_forum/profile/profile_personal.html:31
+#: templates/djangobb_forum/profile/profile_personality.html:54
+#: templates/djangobb_forum/profile/profile_privacy.html:25
+msgid "When you update your profile, you will be redirected back to this page."
+msgstr ""
+"Při aktualizaci svého profilu budete přesměrováni zpět na tuto stránku."
+
+#: templates/djangobb_forum/profile/profile_essentials.html:9
+#: templates/djangobb_forum/profile/profile_menu.html:7
+msgid "Essentials"
+msgstr "Základní"
+
+#: templates/djangobb_forum/profile/profile_essentials.html:15
+msgid "Enter your username and password"
+msgstr "Zadejte své uživatelské jméno a heslo"
+
+#: templates/djangobb_forum/profile/profile_essentials.html:26
+#: templates/djangobb_forum/profile/profile_essentials.html:28
+msgid "Change password"
+msgstr "Změna hesla"
+
+#: templates/djangobb_forum/profile/profile_essentials.html:37
+msgid "Enter a valid e-mail address"
+msgstr "Zadejte platnou e-mailovou adresu"
+
+#: templates/djangobb_forum/profile/profile_essentials.html:51
+msgid "Set your localisation options"
+msgstr "Nastavte si své možnosti lokalizace"
+
+#: templates/djangobb_forum/profile/profile_essentials.html:55
+msgid ""
+"Timezone: For the forum to display times correctly you must select your "
+"local timezone."
+msgstr ""
+"Časové pásmo: Aby se Vá správně zobrazil čas, musíte zvolit lokální časovou "
+"zónu."
+
+#: templates/djangobb_forum/profile/profile_essentials.html:61
+msgid ""
+"Language: You can choose which language you wish to use to view the forum"
+msgstr "Jazyk: Můžete si vybrat jazyk, který chcete použít k zobrazení fóru"
+
+#: templates/djangobb_forum/profile/profile_menu.html:3
+msgid "Profile menu"
+msgstr "Profil menu"
+
+#: templates/djangobb_forum/profile/profile_menu.html:12
+#: templates/djangobb_forum/profile/profile_privacy.html:9
+msgid "Privacy"
+msgstr "Soukromé"
+
+#: templates/djangobb_forum/profile/profile_personal.html:15
+msgid "Enter your personal details"
+msgstr "Zadejte osobní detaily"
+
+#: templates/djangobb_forum/profile/profile_personal.html:21
+msgid "Leave blank to use forum default."
+msgstr "Ponechte prázdné pro použití výchozího"
+
+#: templates/djangobb_forum/profile/profile_personality.html:15
+msgid "Set your avatar display options"
+msgstr "Nastavte možnosti zobrazení avataru"
+
+#: templates/djangobb_forum/profile/profile_personality.html:21
+msgid ""
+"An avatar is a small image that will be displayed with all your posts. You "
+"can upload an avatar by clicking the link below. The checkbox 'Use avatar' "
+"below must be checked in order for the avatar to be visible in your posts."
+msgstr ""
+"Avatar je malý obrázek, který se zobrazí pod Vaší přezdívkou u každého "
+"vašeho příspěvku. Nahrát avatar je možné po kliknutí na odkaz níže. "
+"Zaškrtávací políčko \\'Použít avatar\\' musí zaškrtnuto pro zobrazení "
+"avataru."
+
+#: templates/djangobb_forum/profile/profile_personality.html:24
+msgid "Use avatar."
+msgstr "Použít avatar."
+
+#: templates/djangobb_forum/profile/profile_personality.html:27
+#: templates/djangobb_forum/profile/profile_personality.html:30
+msgid "Upload avatar"
+msgstr "Nahrát avatar"
+
+#: templates/djangobb_forum/profile/profile_personality.html:28
+msgid "Delete avatar"
+msgstr "Smazat avatar"
+
+#: templates/djangobb_forum/profile/profile_personality.html:37
+msgid "Compose your signature"
+msgstr "Vytvořit vlastní podpis"
+
+#: templates/djangobb_forum/profile/profile_personality.html:40
+msgid ""
+"A signature is a small piece of text that is attached to your posts. In it, "
+"you can enter just about anything you like. Perhaps you would like to enter "
+"your favourite quote or your star sign. It's up to you! In your signature "
+"you can use BBCode if it is allowed in this particular forum. You can see "
+"the features that are allowed/enabled listed below whenever you edit your "
+"signature."
+msgstr ""
+"Podpis je text, který se bude vkládat ke každému vašemu příspěvku. Vložte si "
+"tam co uznáte za vhodné. Třeba nějaký oblíbený citát, to vše je na Vás. "
+"Můžete také použít i BBcode funkce, pokud jsou v podpisu povoleny."
+
+#: templates/djangobb_forum/profile/profile_personality.html:49
+msgid "No signature currently stored in profile."
+msgstr "Žádný podpis není uložen v profilu."
+
+#: templates/djangobb_forum/profile/profile_privacy.html:15
+msgid "Set your privacy options"
+msgstr "Nastavte si své soukromí"
+
+#: templates/djangobb_forum/profile/profile_privacy.html:18
+msgid ""
+"Select whether you want your e-mail address to be viewable to other users or "
+"not and if you want other users to be able to send you e-mail via the forum "
+"(form e-mail) or not."
+msgstr ""
+"Vyberte, zda chcete, aby vaše e-mailová adresa byla viditelná pro ostatní "
+"uživatele, nebo ne, a pokud chcete, aby ostatní uživatelé mohli poslat e-"
+"mail přes fórum (formulář na odeslání e-mailu) nebo ne."
+
+#~ msgid "Topic count"
+#~ msgstr "Počet témat"
+
+#~ msgid "Attachment"
+#~ msgstr "Příloha"
+
+#~ msgid "Attachment is too big"
+#~ msgstr "Příloha je příliš velká"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "User with login %s does not exist"
+#~ msgstr "Uživatel s uživatelským jménem %s neexistuje"
+
+#~ msgid "You already voted for this post"
+#~ msgstr "Již jste hlasoval/a"
+
+#~ msgid "Display your e-mail address."
+#~ msgstr "Zobrazit Vaši e-mailovou adresu"
+
+#~ msgid "Hide your e-mail address but allow form e-mail."
+#~ msgstr "Skrýt e-mailovou adresu ale povolit e-maily z formuláře"
+
+#~ msgid "Hide your e-mail address and disallow form e-mail."
+#~ msgstr "Skrýt e-mailovou adresu a nepovolit e-maily z formuláře"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "To"
+#~ msgstr "Komu"
+
+#~ msgid "Time"
+#~ msgstr "Čas"
+
+#~ msgid "Sign"
+#~ msgstr "Podpis"
+
+#~ msgid "Reputation"
+#~ msgstr "Reputace"
+
+#~ msgid "Reputations"
+#~ msgstr "Reputace"
+
+#~ msgid "Time zone"
+#~ msgstr "Časová zóna"
+
+#~ msgid "Avatar"
+#~ msgstr "Avatar"
+
+#~ msgid "Theme"
+#~ msgstr "Vzhled"
+
+#~ msgid "Show avatar"
+#~ msgstr "Zobrazit avatar"
+
+#~ msgid "Privacy permission"
+#~ msgstr "Nastavení soukromí"
+
+#~ msgid "Default markup"
+#~ msgstr "Základní značkování"
+
+#~ msgid "Ban start"
+#~ msgstr "Začátek zákazu"
+
+#~ msgid "Ban end"
+#~ msgstr "Konec zákazu"
+
+#~ msgid "Size"
+#~ msgstr "Velikost"
+
+#~ msgid "Content type"
+#~ msgstr "Typ obsahu"
+
+#~ msgid "Path"
+#~ msgstr "Cesta adresáře"
+
+#~ msgid "Hash"
+#~ msgstr "Hash"
+
+#~ msgid "Quote"
+#~ msgstr "Citovat"
+
+#~ msgid "Board footer"
+#~ msgstr "Zápatí"
+
+#~ msgid "Index"
+#~ msgstr "Index"
+
+#~ msgid "User list"
+#~ msgstr "Seznam uživatelů"
+
+#~ msgid "Search"
+#~ msgstr "Hledat"
+
+#~ msgid "PM"
+#~ msgstr "PM"
+
+#~ msgid "Log out"
+#~ msgstr "Odhlásit"
+
+#~ msgid "Log in"
+#~ msgstr "Přihlásit"
+
+#~ msgid "Sign up"
+#~ msgstr "Registrace"
+
+#~ msgid "Logged in as"
+#~ msgstr "Přihlášen jako"
+
+#~ msgid "Last visit:"
+#~ msgstr "Poslední návštěva:"
+
+#~ msgid " There are new messages (%(new_msg)s)"
+#~ msgstr "Máte (%(new_msg)s) nové zprávy"
+
+#~ msgid "You are not logged in."
+#~ msgstr "Nejste přihlášen/a."
+
+#~ msgid "There are new reports"
+#~ msgstr "Máte nové reporty"
+
+#~ msgid "Show new posts since last visit"
+#~ msgstr "Zobrazit nové příspěvky od poslední návštěvy"
+
+#~ msgid "Mark all topics as read"
+#~ msgstr "Označit všechno jako přečteno"
+
+#~ msgid "Notice"
+#~ msgstr "Upozornit"
+
+#~ msgid "Search links"
+#~ msgstr "Hledané odkazy"
+
+#~ msgid "Show recent posts"
+#~ msgstr "Zobrazit poslední příspěvky"
+
+#~ msgid "Show unanswered posts"
+#~ msgstr "Zobrazit příspěvky bez odpovědí"
+
+#~ msgid "Show your subscribed topics"
+#~ msgstr "Zobrazit témata s oznamováním"
+
+#~ msgid "Show your posts"
+#~ msgstr "Zobrazit mé příspěvky"
+
+#~ msgid "Reputation of the user"
+#~ msgstr "Reputace uživatele"
+
+#~ msgid "From user"
+#~ msgstr "Od uživatele"
+
+#~ msgid "For post in topic"
+#~ msgstr "Každý příspěvek v tématu"
+
+#~ msgid "Estimation"
+#~ msgstr "Akce"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Are you sure"
+#~ msgstr "Jste si jistý/á"
+
+#~ msgid "Please, fill the form"
+#~ msgstr "Prosím, vyplňte formulář"
+
+#~ msgid "Your name:"
+#~ msgstr "Vaše jméno:"
+
+#~ msgid "To whom we change a reputation:"
+#~ msgstr "Komu změnit pověst:"
+
+#~ msgid "Method:"
+#~ msgstr "Metoda:"
+
+#~ msgid "Add of a reputation"
+#~ msgstr "Zvýšení reputace"
+
+#~ msgid "Reduction of a reputation"
+#~ msgstr "Snížení reputace"
+
+#~ msgid "Enter your search criteria"
+#~ msgstr "Zadejte svá vyhledávací kritéria"
+
+#~ msgid ""
+#~ "To search by keyword, enter a term or terms to search for. Separate terms "
+#~ "with spaces. To search by author enter the username of the author whose "
+#~ "posts you wish to search for."
+#~ msgstr ""
+#~ "Chcete-li hledat podle klíčového slova zadejte termín nebo termíny které "
+#~ "se mají hledat. Jednotlivá slova oddělte mezerami. Pro vyhledávání podle "
+#~ "autora zadejte uživatelské jméno autora, jehož příspěvky chcete vyhledat."
+
+#~ msgid "Select where to search"
+#~ msgstr "Vyberte kde hledat"
+
+#~ msgid "All forums"
+#~ msgstr "Všechny diskuze"
+
+#~ msgid ""
+#~ "Choose in which forum you would like to search and if you want to search "
+#~ "in topic subjects, message text or both."
+#~ msgstr ""
+#~ "Vyberte v jaké diskuzi chcete vyhledávat a jestli chcete vyhledávat v "
+#~ "předmětu, v textu zprávy nebo v obou."
+
+#~ msgid "Select how to view search results"
+#~ msgstr "Vyberte si, jak chcete zobrazit výsledky vyhledávání"
+
+#~ msgid "You can choose how you wish to sort and show your results."
+#~ msgstr "Můžete si vybrat, jak chcete setřídit a zobrazit výsledky."
+
+#~ msgid "Replies:"
+#~ msgstr "Odpovědi:"
+
+#~ msgid "Go to post"
+#~ msgstr "Přejít na příspěvek"
+
+#~ msgid "Info"
+#~ msgstr "Info"
+
+#~ msgid "Your search returned no hits."
+#~ msgstr "Vyhledávání nenašlo žádné výsledky."
+
+#~ msgid "Search results"
+#~ msgstr "Výsledky vyhledávání"
+
+#~ msgid "Attachments:"
+#~ msgstr "Přílohy:"
+
+#~ msgid "Edit"
+#~ msgstr "Editovat"
+
+#~ msgid "Delete multiple posts"
+#~ msgstr "Smazat více příspěvků"
+
+#~ msgid "Enter an avatar file to upload"
+#~ msgstr "Zadejte soubor avataru k nahrání"
+
+#~ msgid ""
+#~ "An avatar is a small image that will be displayed under your username in "
+#~ "your posts. It must not be any bigger than %(avatar_width)s x "
+#~ "%(avatar_height)s pixels "
+#~ msgstr ""
+#~ "Avatar je malý obrázek, který se zobrazí pod vaším uživatelským jménem ve "
+#~ "vašich příspěvcích. Nesmí být žádný větší než %(avatar_width)s x "
+#~ "%(avatar_height)s  pixelů"
+
+#~ msgid "Upload"
+#~ msgstr "Upload"
+
+#~ msgid "User search"
+#~ msgstr "Hledání uživatele"
+
+#~ msgid "Find and sort users"
+#~ msgstr "Najít a seřadit uživatele"
+
+#~ msgid ""
+#~ "Enter a username to search for. The username field can be left blank. "
+#~ "Sort users by name, date registered or number of posts and in ascending/"
+#~ "descending order."
+#~ msgstr ""
+#~ "Zadejte uživatelské jméno pro vyhledávání. Políčko jméno uživatele může "
+#~ "zůstat prázdné. Seřadit uživatele podle jména, data registrace nebo počtu "
+#~ "příspěvků vzestupně / sestupně."
+
+#~ msgid "Full Version:"
+#~ msgstr "Plná verze:"
+
+#~ msgid "IMPORTANT:"
+#~ msgstr "DŮLEŽITÉ:"
+
+#~ msgid "replies"
+#~ msgstr "odpovědi"

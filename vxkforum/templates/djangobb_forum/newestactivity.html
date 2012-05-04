@@ -1,0 +1,11 @@
+{% load i18n %}
+
+<h3>{% trans 'Newest activity in forums' %}:</h3>
+<ul class="section-list">
+{% for t in topic_list %}
+<li {% if forloop.first %}class="first"{% endif %}>
+	<h4><a href="{{t.get_absolute_url}}">{{t.name}}</a></h4>
+	<div><span>{{t.last_post.user}}</span>:{{t.last_post.summary}}</div>
+</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,65 @@
+
+/* tables */
+.blocktable table {
+  border-collapse: collapse; padding: 0px; width: 100%; 
+  margin-bottom: 20px; clear: both;
+}
+.blocktable th { background: grey; color: white; }
+.blocktable table td, .blocktable table th { border: 1px solid black; padding: 2px; }
+
+.blockpost { clear: both; }
+
+.clearer { clear: both; visibility: hidden; }
+
+.tc2, .tc3 { width: 5em; text-align: center; }
+.tcr { width: 16em; }
+
+.byuser { font-size: 12px; font-style: italic; }
+.inew a { font-weight: bold; }
+
+.licon { padding-left: 18px; }
+
+.postfootright { clear:left; float: right; margin-top: 10px; }
+.postfootright li { float: left; margin-left: 5px; }
+
+.postleft { border-right: 1px dotted black; padding-right: 10px; margin-right: 10px; }
+.postleft dd { font-size: 12px; }
+.postleft dl { line-height: 10px; }
+.authority { margin: 4px 0; }
+
+.linkst { float: right; }
+.blockform * { margin: 5px 0; }
+.blockform textarea { width: 100%; height: 300px; }
+.quickpost { margin-top: 20px; border-top: 1px dotted black; }
+
+.categoryhead {
+	font-weight: bold;
+}
+
+.conr {
+	float: right;
+	text-align: right;
+	clear: right;
+	width: 40%
+}
+
+.postmsg { 
+	float: right; 
+	overflow: hidden;
+	width: 665px;
+}
+.postmsg blockquote { background: #dddddd; font-style: italic; width: 100%; }
+.postmsg blockquote em { font-weight: bold; }
+.postmsg * { max-width: 665px; max-height: 500px; }
+
+
+.categoryhead { 
+	padding: 2px 10px; text-align: center; color: white;
+}
+
+.box { 
+	border: 1px solid black;
+	padding: 10px;
+	margin-bottom: 10px; 
+}
+.box .postleft { float: left; width: 200px; overflow: hidden; }
