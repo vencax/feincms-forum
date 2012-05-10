@@ -9,17 +9,22 @@
 <li class="selected">&raquo; {% trans "New topic" %}</li>
 {% endfragment %}
 
+{% fragment request "extrahead" %}
+{{ form.media }}
+<script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/board.js"></script>
+{% endfragment %}
+
 <h2>{% trans "New topic" %}</h2>
 
-<div class="blockform">
-	<form id="post" action="" method="post">
-		{% csrf_token %}
-		<table>
-		{{ form.as_table }}
-		</table>
-		<p class="submit"><input type="submit" value="{% trans "Submit" %}" />
-		<a href="javascript:history.go(-1)">{% trans "Go back" %}</a></p>
-	</form>
-</div>
+<form id="post" class="blockform" action="" method="post">
+	{% csrf_token %}
+	<p>Název tématu:{{ form.name }}</p>
+	<p>Příspěvek:</p>
+	{{ form.body }}
+	<p class="submit">
+		<input type="submit" value="{% trans "Submit" %}" />
+		<input type="submit" onclick="javascript:history.go(-1)" value="{% trans "Go back" %}" />
+	</p>
+</form>
 
 {% endblock %}

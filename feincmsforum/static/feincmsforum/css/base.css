@@ -7,9 +7,7 @@
 .blocktable th { background: grey; color: white; }
 .blocktable table td, .blocktable table th { border: 1px solid black; padding: 2px; }
 
-.blockpost { clear: both; }
-
-.clearer { clear: both; visibility: hidden; }
+.blockpost { clear: both; margin-bottom: 5px; }
 
 .tc2, .tc3 { width: 5em; text-align: center; }
 .tcr { width: 16em; }
@@ -19,12 +17,12 @@
 
 .licon { padding-left: 18px; }
 
-.postfootright { clear:left; float: right; margin-top: 10px; }
-.postfootright li { float: left; margin-left: 5px; }
+.postfooter { padding: 4px; clear: both; text-align: right; border-top: 1px dotted; }
+.postfooter li { float: left; margin-left: 5px; }
 
-.postleft { border-right: 1px dotted black; padding-right: 10px; margin-right: 10px; }
+.postleft { border-right: 1px dotted black; padding-right: 10px; margin-right: 10px;
+float: left; width: 150px; overflow: hidden; }
 .postleft dd { font-size: 12px; }
-.postleft dl { line-height: 10px; }
 .authority { margin: 4px 0; }
 
 .linkst { float: right; }
@@ -46,11 +44,11 @@
 .postmsg { 
 	float: right; 
 	overflow: hidden;
-	width: 665px;
+	width: 715px;
 }
 .postmsg blockquote { background: #dddddd; font-style: italic; width: 100%; }
 .postmsg blockquote em { font-weight: bold; }
-.postmsg * { max-width: 665px; max-height: 500px; }
+.postmsg * { max-width: 715px; max-height: 500px; }
 
 
 .categoryhead { 
@@ -62,4 +60,3 @@
 	padding: 10px;
 	margin-bottom: 10px; 
 }
-.box .postleft { float: left; width: 200px; overflow: hidden; }

@@ -48,8 +48,6 @@ class AddPostForm(forms.ModelForm):
         self.forum = kwargs.pop('forum', None)
         self.ip = kwargs.pop('ip', None)
         super(AddPostForm, self).__init__(*args, **kwargs)
-#        
-#        self.fields['body'].widget=CKEditor()
 
     def clean(self):
         '''
@@ -73,7 +71,7 @@ class AddPostForm(forms.ModelForm):
         post = Post(topic=self.topic, user=self.user, user_ip=self.ip,
                     body=self.cleaned_data['body'])
 
-        post.save()
+        post.save(force_insert=True)
         return post
       
 class AddTopicForm(AddPostForm):

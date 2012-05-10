@@ -7,10 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save, post_delete
 from feincms.content.application import models as appmodels
 
-from ckeditor import fields as ckedit_fields
-from fields import AutoOneToOneField, JSONField
-from util import smiles, convert_text_to_html
+from fields import AutoOneToOneField, JSONField, BBCodeTextField
+from util import smiles
 import settings as forum_settings
+from postmarkup.parser import render_bbcode
+from django.utils.html import urlize
+from feincmsforum.util import convert_text_to_html
+from django.template.defaultfilters import safe
 
 if 'south' in settings.INSTALLED_APPS:
     from south.modelsinspector import add_introspection_rules
@@ -172,8 +175,7 @@ class Post(models.Model):
     created = models.DateTimeField(_('Created'), auto_now_add=True)
     updated = models.DateTimeField(_('Updated'), blank=True, null=True)
     updated_by = models.ForeignKey(User, verbose_name=_('Updated by'), blank=True, null=True)
-    body = ckedit_fields.RichTextField(config_name='bbcode', verbose_name=_('Message'))
-    body_html = models.TextField(_('HTML version'))
+    body = BBCodeTextField(verbose_name=_('Message'))
     user_ip = models.IPAddressField(_('User IP'), blank=True, null=True)
 
     class Meta:
@@ -181,12 +183,6 @@ class Post(models.Model):
         get_latest_by = 'created'
         verbose_name = _('Post')
         verbose_name_plural = _('Posts')
-
-    def save(self, *args, **kwargs):
-        self.body_html = convert_text_to_html(self.body) 
-        if forum_settings.SMILES_SUPPORT:
-            self.body_html = smiles(self.body_html)
-        super(Post, self).save(*args, **kwargs)
         
     def title(self):
         """ Needed for searching """
@@ -195,6 +191,11 @@ class Post(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('djangobb:post', [self.id])
+    
+    def _get_body_html(self):
+        val = convert_text_to_html(self.body)
+        return _get_cached_prop_val(self, '_body_html', val)
+    body_html = property(_get_body_html)
 
     def summary(self):
         LIMIT = 50
@@ -303,10 +304,12 @@ post_delete.connect(forum_post_deleted, sender=Post, dispatch_uid='forum_post_de
 
 # ------------------------- privates ------------------------
 
-def _get_cached_prop_val(obj, prop_name, init_func):
+def _get_cached_prop_val(obj, prop_name, val):
     """ Support function for getting cached property values from models """
     try:
         return getattr(obj, prop_name)
     except AttributeError:
-        setattr(obj, prop_name, init_func())
+        if hasattr(val, '__call__'):
+            val = val()
+        setattr(obj, prop_name, val)
         return getattr(obj, prop_name)

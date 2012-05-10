@@ -262,6 +262,8 @@ def set_language(request, language):
 
 
 def convert_text_to_html(text):
-    text = render_bbcode(text)
+    text = render_bbcode(text, encoding='utf-8')
     text = text.replace('http:///', '/')
+    if forum_settings.SMILES_SUPPORT:
+            text = smiles(text)
     return urlize(text)

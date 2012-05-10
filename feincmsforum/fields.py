@@ -2,6 +2,12 @@
 Details about AutoOneToOneField:
     http://softwaremaniacs.org/blog/2007/03/07/auto-one-to-one-field/
 """
+from django.core.exceptions import ImproperlyConfigured
+from django.utils.safestring import mark_safe
+from django.template.loader import render_to_string
+from django.forms.util import flatatt
+from django.utils.html import conditional_escape
+from django.utils.encoding import force_unicode
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -108,3 +114,49 @@ class JSONField(models.TextField):
         if isinstance(value, dict):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_prep_value(value)
+
+# ==================== BBCoDE ==========================
+from django import forms
+
+class BBCodeTextField(models.TextField):
+    def __init__(self, *args, **kwargs):
+        self.config_name = kwargs.pop("config_name", "default")
+        super(BBCodeTextField, self).__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'form_class': BBCodeFormField,
+            'config_name': self.config_name,
+        }
+        defaults.update(kwargs)
+        return super(BBCodeTextField, self).formfield(**defaults)
+
+
+class BBCodeFormField(forms.fields.Field):
+    def __init__(self, config_name='default', *args, **kwargs):
+        kwargs.update({'widget': BBCodeWidget()})
+        super(BBCodeFormField, self).__init__(*args, **kwargs)
+
+class BBCodeWidget(forms.Textarea):
+    """
+    Widget providing CKEditor for Rich Text Editing.
+    Supports direct image uploads and embed.
+    """
+    class Media:
+        js = (
+            settings.STATIC_URL + 'js/tiny_mce/tiny_mce.js',
+        )
+
+    def render(self, name, value, attrs={}):
+        if value is None:
+            value = ''
+        final_attrs = self.build_attrs(attrs, name=name)
+#        self.config['filebrowserUploadUrl'] = reverse('ckeditor_upload')
+#        self.config['filebrowserBrowseUrl'] = reverse('ckeditor_browse')
+        return mark_safe(render_to_string('feincmsforum/bbcodefield.html', {
+            'final_attrs': flatatt(final_attrs),
+            'value': conditional_escape(force_unicode(value)),
+            'id': final_attrs['id'],
+            'name' : final_attrs['name']
+            })
+        )

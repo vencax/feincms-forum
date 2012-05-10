@@ -3,6 +3,11 @@
 
 {% block bbcontent %}
 
+{% fragment request "extrahead" %}
+{{ form.media }}
+<script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/board.js"></script>
+{% endfragment %}
+
 {% fragment request "extrabreadcrumbs" %}
 <li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a></li>
 <li class="selected">&raquo; {{ topic.name }}</li>
@@ -10,10 +15,10 @@
 
 {% fragment request "title" %}{{ topic.forum.name }} / {{ topic.name }}{% endfragment %}
 {% fragment request "keywords" %}{{ topic.name }}{% endfragment %}
-{% fragment request "description" %}{{ topic.posts.0 }}{% endfragment %}
+{% fragment request "description" %}{{ topic.posts.0 }}body_html may not be NULL{% endfragment %}
 
-<div class="right">
-  <ul class="rhorizList">
+
+<ul class="right rhorizList">
 	<li><a href="{% url djangobb:forum_topic_feed topic.id %}" class="icon rss"></a></li>
 	{% if not topic.closed and user.is_authenticated %}
 	<li><a href="{% url djangobb:add_post topic.forum.id topic.id %}" class="form-submit">
@@ -28,8 +33,7 @@
 		class="form-submit">{% trans "Subscribe" %}</a></li>
 		{% endif %}
 	{% endif %}
-  </ul>
-</div>
+</ul>
 
 <h1>{{ topic.name }}</h1>
 
@@ -62,8 +66,8 @@
 		{% endif %}
 	  </div>
 		
-	  <div class="postfootright">
-		<ul class="submit">
+	  <div class="postfooter">
+		<ul class="submit horizList right">
 			<li class="postreport">
 				{% app_reverse "report" "feincmsforum.urls" post.id as postURL %}
 				<a href="{{ postURL }}">{% trans "Report" %}</a>
@@ -98,8 +102,6 @@
 			{% endcomment %}
 		</ul>
 	  </div>
-		
-	  <div class="clearer"></div>
 	</div>
 </div>
 {% endfor %}

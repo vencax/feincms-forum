@@ -2,12 +2,12 @@
 {% load forum_extras fragment_tags %}
 {% load i18n %}
 
-{% block extrahead %}
+{% block bbcontent %}
+
+{% fragment request "extrahead" %}
 {{ form.media }}
 <script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/board.js"></script>
-{% endblock %}
-
-{% block bbcontent %}
+{% endfragment %}
 
 {% fragment request "extrabreadcrumbs" %}
 <li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a></li>

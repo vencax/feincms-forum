@@ -1,3 +1,19 @@
+tinyMCE.init({
+        theme : "advanced",
+        plugins : "bbcode",
+        theme_advanced_buttons1 : "bold,italic,underline,undo,redo,link,unlink,image,forecolor,blockquote,removeformat,cleanup",
+        theme_advanced_buttons2 : "",
+        theme_advanced_buttons3 : "",
+        theme_advanced_toolbar_align : "center",
+        theme_advanced_toolbar_location : "top",
+        content_css : "example_data/bbcode.css",
+        entity_encoding : "raw",
+        add_unload_trigger : false,
+        remove_linebreaks : false,
+        inline_styles : false,
+        convert_fonts_to_spans : false
+});
+
 var txt = ''
 
 function copyQ(nick) { 
