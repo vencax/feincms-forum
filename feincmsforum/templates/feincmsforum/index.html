@@ -6,45 +6,11 @@
 <li class="selected">&raquo; {% trans 'Forums' %}</li>
 {% endblock %}
 
-{% block extra_meta %}
-<script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/jquery.cookie.js"></script>
-<script type="text/javascript">
-
-	function set_collapser(cat_id) {
-		category_body_id = "category_body_" + cat_id;
-		if($.cookie(category_body_id)){
-			item_id = "#" + category_body_id;
-			head_id = item_id.replace("body", "head");
-			$(head_id).addClass("collapsed");
-			$(item_id).hide()
-		}
-	}
-	$(document).ready(function(){
-		$("a.toggle").click(function(){
-			header_id = $(this).parent().attr('id');
-			body_id = header_id.replace("head", "body");
-			item_id = '#' + body_id
-			if ($(this).parent().attr('class')==''){
-				$(this).parent().addClass("collapsed");
-				$.cookie(body_id, 'collapsed');
-			}else {
-				$(this).parent().removeClass("collapsed");
-				$.cookie(body_id, '');
-			}
-			$(item_id).slideToggle("slow");
-		});
-	{% for iter in cats %}
-		set_collapser({{ iter.id }})
-	{% endfor %}
-	});
-</script>
-{% endblock %}
-
 {% block bbcontent %}
 
 <div id="idx1" class="blocktable">
 {% for iter in cats %}
-	<div id="category_head_{{ iter.id }}" class="categoryhead headlighted">
+	<div id="category_head_{{ iter.id }}" class="ui-widget-header categoryhead">
 		<span>{{ iter.cat }}</span>
 	</div>
 	<div id="category_body_{{ iter.id }}">
@@ -72,20 +38,20 @@
   <legend>{% trans "Board information" %}</legend>
 	<div class="inbox">
 		<dl class="conr">
-			<dt><strong>{% trans "Board statistics" %}</strong></dt>
-			<dd>{% trans "Total number of registered users:" %} <strong>{{ users }}</strong></dd>
-			<dd>{% trans "Total number of topics:" %} <strong>{{ topics }}</strong></dd>
-			<dd>{% trans "Total number of posts:" %} <strong>{{ posts }}</strong></dd>
+			<dt><span class="bold">{% trans "Board statistics" %}</span></dt>
+			<dd>{% trans "Total number of registered users:" %} {{ users }}</dd>
+			<dd>{% trans "Total number of topics:" %} {{ topics }}</dd>
+			<dd>{% trans "Total number of posts:" %} {{ posts }}</dd>
 		</dl>
 		<dl class="conl">
-			<dt><strong>{% trans "User information" %}</strong></dt>
+			<dt><span class="bold">{% trans "User information" %}</span></dt>
 			<dd>{% trans "Newest registered user:" %} {{ last_user }}</dd>
-			<dd>{% trans "Registered users online:" %} <strong>{{ online_count }}</strong></dd>
-			<dd>{% trans "Guests online:" %} <strong>{{ guest_count }}</strong></dd>
+			<dd>{% trans "Registered users online:" %} {{ online_count }}</dd>
+			<dd>{% trans "Guests online:" %} {{ guest_count }}</dd>
 		</dl>
         {% if online_count %}
             <dl id="onlinelist" class= "clearb">
-                <dt><strong>{% trans "Online:" %} </strong></dt>
+                <dt>{% trans "Online:" %} </dt>
                 {% for online in users_online %}
                     <dd>{{ online }}</dd>
                 {% endfor %}

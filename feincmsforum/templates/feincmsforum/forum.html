@@ -12,17 +12,15 @@
 {% fragment request "keywords" %}{{ forum.name }}{% endfragment %}
 {% fragment request "description" %}{{ forum.description}}{% endfragment %}
 
-<div class="right">
-	<ul class="rhorizList">
-		<li><a href="{% url djangobb:forum_forum_feed forum.id %}" class="icon rss"></a></li>
-		{% if user.is_authenticated %}
-		{% app_reverse "add_topic" "feincmsforum.urls" forum.id as addTopicURL %}
-		<li class="submit"><a href="{{ addTopicURL }}">
-			{% trans "New topic" %}
-		</a></li>
-		{% endif %}
-	</ul>
-</div>
+<ul class="rhorizList right">
+	<li><a href="{% url djangobb:forum_forum_feed forum.id %}" class="icon rss"></a></li>
+	{% if user.is_authenticated %}
+	{% app_reverse "add_topic" "feincmsforum.urls" forum.id as addTopicURL %}
+	<li class="submit"><a href="{{ addTopicURL }}">
+		{% trans "New topic" %}
+	</a></li>
+	{% endif %}
+</ul>
 
 <h1>{{ forum.name }}</h1>
 
@@ -69,24 +67,22 @@
 {% endblock %}
 
 {% block controls %}
-<div class="conl">
-	<form id="qjump" method="get" action="forum">
-		<div><label>{% trans "Jump to" %}
-		<br />
-		<select name="id" id="forum_id" onchange="window.location=('{% url djangobb:index %}'+this.options[this.selectedIndex].value)">
-			{% for category in categories %}
-				<optgroup label="{{ category }}">
-					{% for forum in category.forums.all %}
-						<option value="{{ forum.id }}">{{ forum.name }}</option>
-					{% endfor %}
-				</optgroup>
-			{% endfor %}
-		</select>
-		<input type="button" onclick="window.location=('{% url djangobb:index %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
-		</label></div>
-	</form>
-	{% if moderator %}
-		<p id="modcontrols"><a href="{% url djangobb:moderate forum.id %}">{% trans "Moderate forum" %}</a></p>
-	{% endif %}
-</div>
+<form id="qjump" method="get" action="forum">
+	<div><label>{% trans "Jump to" %}
+	<br />
+	<select name="id" id="forum_id" onchange="window.location=('{% url djangobb:index %}'+this.options[this.selectedIndex].value)">
+		{% for category in categories %}
+			<optgroup label="{{ category }}">
+				{% for forum in category.forums.all %}
+					<option value="{{ forum.id }}">{{ forum.name }}</option>
+				{% endfor %}
+			</optgroup>
+		{% endfor %}
+	</select>
+	<input type="button" onclick="window.location=('{% url djangobb:index %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
+	</label></div>
+</form>
+{% if moderator %}
+	<p id="modcontrols"><a href="{% url djangobb:moderate forum.id %}">{% trans "Moderate forum" %}</a></p>
+{% endif %}
 {% endblock %}
