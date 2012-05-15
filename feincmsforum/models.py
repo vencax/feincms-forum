@@ -199,7 +199,7 @@ class Post(models.Model):
 
     def summary(self):
         LIMIT = 50
-        tail = len(self.body) > LIMIT and '...' or ''
+        tail = len(self.body_html) > LIMIT and '...' or ''
         return self.body[:LIMIT] + tail
 
     __unicode__ = summary
