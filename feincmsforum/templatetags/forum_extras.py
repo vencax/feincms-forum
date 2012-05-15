@@ -10,7 +10,7 @@ from django.contrib.humanize.templatetags.humanize import naturalday
 
 from feincmsforum import settings as forum_settings
 from feincmsforum.util import convert_text_to_html
-from feincmsforum.models import Topic
+from feincmsforum.models import Topic, Category
 
 
 register = template.Library()
@@ -27,6 +27,13 @@ def link(obj, anchor=u''):
     url = hasattr(obj, 'get_absolute_url') and obj.get_absolute_url() or None
     anchor = anchor or smart_unicode(obj)
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
+
+@register.inclusion_tag('feincmsforum/templatetags/jumpto.html')
+def jumpto(topic):
+    return {
+        'topic' : topic,
+        'categories': Category.objects.all(),
+    }
 
 @register.tag
 def forum_time(parser, token):
@@ -112,12 +119,12 @@ def has_unreads(topic, user):
         return True
 
 
+
 @register.filter
 def forum_moderated_by(topic, user):
     """
     Check if user is moderator of topic's forum.
     """
-
     return user.is_superuser or user in topic.forum.moderators.all()
 
 @register.inclusion_tag('feincmsforum/tag_newesttopics.html')
@@ -153,12 +160,12 @@ def forum_posted_by(post, user):
 
 
 @register.filter
-def forum_equal_to(obj1, obj2):
+def can_post_be_deleted(post, request):
     """
     Check if objects are equal.
     """
-
-    return obj1 == obj2
+    return request.user.is_superuser() or \
+        (request.user == post.user and post.topic.last_post)
 
 
 @register.filter

@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.utils.html import strip_tags
 
 from util import absolute_url
 from django.core.mail import send_mail
 from django.template import loader
 from django.template.context import Context
+from django.contrib.sites.models import Site
 
 template_name = 'feincmsforum/mail/post_notify_mail.html'
 
@@ -13,8 +13,8 @@ def notify_topic_subscribers(post):
     topic = post.topic
     post_body_text = strip_tags(post.body_html)
     t = loader.get_template(template_name)
-    unsubscr_url = absolute_url(reverse('djangobb:forum_delete_subscription', 
-                                        args=[post.topic.id]))
+    unsubscr_url = '%s/%s' % (Site.objects.get_current(), 
+                              post.topic.get_absolute_url())
     if post != topic.head:
         for user in topic.subscribers.all():
             if user != post.user:

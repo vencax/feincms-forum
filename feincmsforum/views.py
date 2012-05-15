@@ -18,10 +18,10 @@ from models import Category, Forum, Topic, Post, Profile, PostTracking
 from forms import AddPostForm, EditPostForm,\
     MailToForm, ForumProfileForm, ReportForm, AddTopicForm
 from . import settings as forum_settings
-from util import smiles, convert_text_to_html
 from templatetags.forum_extras import forum_moderated_by
 
 from django.views.generic.base import TemplateView
+from feincmsforum.util import JsonResponse
 
 @render_to('feincmsforum/index.html')
 def index(request, full=True):
@@ -99,7 +99,7 @@ def moderate(request, forum_id):
                 }
     else:
         raise Http404
-        
+
 @login_required
 @render_to('feincmsforum/report.html')
 def report(request, post_id):
@@ -116,25 +116,25 @@ def markread(request):
     PostTracking.objects.filter(user__id=request.user.id).\
         update(last_read=datetime.now(), topics=None)
     return HttpResponseRedirect(reverse('djangobb:index'))
-  
-  
+
+
 class MailToView(TemplateView):
     template_name = 'feincmsforum/mail_to.html'
-    
+
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username'])
-        return self.render_to_response({ 
+        return self.render_to_response({
             'form' : MailToForm(),
             'mailto' : user
         })
-      
+
     def post(self, request, *args, **kwargs):
         user = get_object_or_404(User, username=kwargs['username'])
         form = MailToForm(request.POST)
         if form.is_valid():
             subject = form.cleaned_data['subject']
             body = form.cleaned_data['body'] + '\n %s %s [%s]' % \
-                (Site.objects.get_current().domain, 
+                (Site.objects.get_current().domain,
                  request.user.username,
                  request.user.email)
             user.email_user(subject, body, request.user.email)
@@ -179,7 +179,7 @@ def show_topic(request, topic_id):
         page = int(request.GET.get('page', 1))
     except ValueError:
         page = 1
-    paginator = Paginator(topic.posts.all().select_related(), 
+    paginator = Paginator(topic.posts.all().select_related(),
                           forum_settings.TOPIC_PAGE_SIZE)
     try:
         page_obj = paginator.page(page)
@@ -205,7 +205,6 @@ def show_topic(request, topic_id):
 
     highlight_word = request.GET.get('hl', '')
     return {
-        'categories': Category.objects.all(),
         'topic': topic,
         'last_post': last_post,
         'form': form,
@@ -213,14 +212,14 @@ def show_topic(request, topic_id):
         'subscribed': subscribed,
         'posts': posts,
         'highlight_word': highlight_word,
-        
+
         'page': page,
         'page_obj': page_obj,
         'pages': paginator.num_pages,
         'results_per_page': paginator.per_page,
         'is_paginated': page_obj.has_other_pages(),
     }
-      
+
 @transaction.commit_on_success
 @render_to('feincmsforum/add_topic.html')
 def create_topic(request, forum_id):
@@ -237,7 +236,7 @@ def create_topic(request, forum_id):
             form.save()
             return HttpResponseRedirect('../')
     return {'form' : form, 'forum' : forum}
-  
+
 def _inject_form(form, **kwargs):
     for k, v in kwargs.items():
         setattr(form, k, v)
@@ -251,9 +250,9 @@ def add_post(request, forum_id, topic_id):
         return HttpResponseForbidden()
     if topic.closed:
         return HttpResponseRedirect(topic.get_absolute_url())
-    
+
     posts = topic.posts.all().select_related()[:5]
-    
+
     if request.method == 'GET':
         form = AddPostForm()
         if 'post_id' in request.GET:
@@ -287,12 +286,12 @@ def profile(request):
       'form': form,
       'TEMPLATE': 'feincmsforum/profile/profile_privacy.html'
     }
-   
+
 def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     count = post.topic.posts.filter(created__lt=post.created).count() + 1
     page = math.ceil(count / float(forum_settings.TOPIC_PAGE_SIZE))
-    url = '%s?page=%d#post-%d' % (reverse('djangobb:topic', args=[post.topic.id]), page, post.id)
+    url = '%s?page=%d#post-%d' % (post.topic.get_absolute_url(), page, post.id)
     return HttpResponseRedirect(url)
 
 
@@ -303,11 +302,11 @@ def edit_post(request, post_id):
     from templatetags.forum_extras import forum_editable_by
 
     post = get_object_or_404(Post, pk=post_id)
-    
+
     if forum_settings.POST_MODIF_DEATHLINE and \
       (datetime.now() - post.created).seconds > forum_settings.POST_MODIF_DEATHLINE:
         return HttpResponseRedirect(post.get_absolute_url())
-      
+
     topic = post.topic
     if not forum_editable_by(post, request.user):
         return HttpResponseRedirect(post.get_absolute_url())
@@ -326,7 +325,7 @@ def edit_post(request, post_id):
 @login_required
 @transaction.commit_on_success
 @render_to('feincmsforum/move_topic.html')
-def move_topic(request):
+def move_topic(request, topic_id):
     if 'topic_id' in request.GET:
         #if move only 1 topic
         topic_ids = [request.GET['topic_id']]
@@ -363,23 +362,27 @@ def move_topic(request):
 
 
 @login_required
+@csrf_exempt
 @transaction.commit_on_success
-def stick_unstick_topic(request, topic_id, action):
-
+def stick_unstick_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if forum_moderated_by(topic, request.user):
-        if action == 's':
-            topic.sticky = True
-        elif action == 'u':
-            topic.sticky = False
+        topic.sticky = not topic.sticky
         topic.save()
-    return HttpResponseRedirect(topic.get_absolute_url())
+        if topic.sticky:
+            return JsonResponse({'stat' : 'OK', 'msg' : _('Unstick topic')})
+        else:
+            return JsonResponse({'stat' : 'OK', 'msg' : _('Stick topic')})
+    else:
+        return JsonResponse({'stat' : 'FAIL',
+                             'msg' : _('you are not moderator of this topic')})
 
 @login_required
+@csrf_exempt
 @transaction.commit_on_success
 def delete_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    
+
     last_post = post.topic.last_post
     topic = post.topic
     forum = post.topic.forum
@@ -392,7 +395,8 @@ def delete_post(request, post_id):
         allowed = False
 
     if not allowed:
-        return HttpResponseRedirect(post.get_absolute_url())
+        return JsonResponse({'stat' : 'FAIL',
+                             'msg' : _('you are not moderator of this topic')})
 
     post.delete()
 
@@ -400,51 +404,37 @@ def delete_post(request, post_id):
         Topic.objects.get(pk=topic.id)
     except Topic.DoesNotExist:
         #removed latest post in topic
-        return HttpResponseRedirect(forum.get_absolute_url())
+        return JsonResponse({'stat' : 'OK',
+                             'redir' : forum.get_absolute_url()})
     else:
-        return HttpResponseRedirect(topic.get_absolute_url())
-
-
-@login_required
-@transaction.commit_on_success
-def open_close_topic(request, topic_id, action):
-
-    topic = get_object_or_404(Topic, pk=topic_id)
-    if forum_moderated_by(topic, request.user):
-        if action == 'c':
-            topic.closed = True
-        elif action == 'o':
-            topic.closed = False
-        topic.save()
-    return HttpResponseRedirect(topic.get_absolute_url())
-  
-  
-@login_required
-@transaction.commit_on_success
-def delete_subscription(request, topic_id):
-    topic = get_object_or_404(Topic, pk=topic_id)
-    topic.subscribers.remove(request.user)
-    if 'from_topic' in request.GET:
-        return HttpResponseRedirect(reverse('djangobb:topic', args=[topic.id]))
-    else:
-        return HttpResponseRedirect(reverse('djangobb:forum_profile', args=[request.user.username]))
-
-@login_required
-@transaction.commit_on_success
-def add_subscription(request, topic_id):
-    topic = get_object_or_404(Topic, pk=topic_id)
-    topic.subscribers.add(request.user)
-    return HttpResponseRedirect(reverse('djangobb:topic', args=[topic.id]))
+        return JsonResponse({'stat' : 'OK', 'msg' : _('post deleted')})
 
 
 @login_required
 @csrf_exempt
-@render_to('feincmsforum/post_preview.html')
-def post_preview(request):
-    '''Preview for markitup'''
-    markup = request.user.forum_profile.markup
-    data = request.POST.get('data', '')
+@transaction.commit_on_success
+def open_close_topic(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    if forum_moderated_by(topic, request.user):
+        topic.closed = not topic.closed
+        topic.save()
+        if topic.closed:
+            return JsonResponse({'stat' : 'OK', 'msg' : _('Open topic')})
+        else:
+            return JsonResponse({'stat' : 'OK', 'msg' : _('Close topic')})
+    else:
+        return JsonResponse({'stat' : 'FAIL',
+                             'msg' : _('you are not moderator of this topic')})
 
-    data = convert_text_to_html(data, markup)
-    data = smiles(data)
-    return {'data': data}
+
+@login_required
+@csrf_exempt
+@transaction.commit_on_success
+def switch_subscription(request, topic_id):
+    topic = get_object_or_404(Topic, pk=topic_id)
+    if request.user in topic.subscribers.all():
+        topic.subscribers.remove(request.user)
+        return JsonResponse({'stat' : 'OK', 'msg' : _('Subscribe')})
+    else:
+        topic.subscribers.add(request.user)
+        return JsonResponse({'stat' : 'OK', 'msg' : _('Unsubscribe')})

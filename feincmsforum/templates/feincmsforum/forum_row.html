@@ -10,7 +10,7 @@
 	<td>
 		<div>
 		  <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a> 
-		  <a href="{% url djangobb:forum_forum_feed forum.id %}" class="rss icon right"></a>
+		  <a href="{% url forum_forum_feed forum.id %}" class="rss icon right"></a>
 		</div>
 		{{ forum.description|safe }}				
 		{% cache 6000 moderators forum.id %}

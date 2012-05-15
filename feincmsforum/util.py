@@ -13,6 +13,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.sites.models import Site
 
 from . import settings as forum_settings
+from django.utils import simplejson
 
 
 #compile smiles regexp
@@ -137,7 +138,8 @@ class JsonResponse(HttpResponse):
     """
     HttpResponse subclass that serialize data into JSON format.
     """
-
+    mimetype = 'application/json; charset=utf8'
+    
     def __init__(self, data, mimetype='application/json'):
         json_data = LazyJSONEncoder().encode(data)
         super(JsonResponse, self).__init__(

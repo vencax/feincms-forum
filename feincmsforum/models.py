@@ -5,15 +5,9 @@ from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save, post_delete
-from feincms.content.application import models as appmodels
 
 from fields import AutoOneToOneField, JSONField, BBCodeTextField
-from util import smiles
-import settings as forum_settings
-from postmarkup.parser import render_bbcode
-from django.utils.html import urlize
 from feincmsforum.util import convert_text_to_html
-from django.template.defaultfilters import safe
 
 if 'south' in settings.INSTALLED_APPS:
     from south.modelsinspector import add_introspection_rules
@@ -22,7 +16,6 @@ if 'south' in settings.INSTALLED_APPS:
                                  '^feincmsforum\.fields\.ExtendedImageField',
                                  '^ckeditor\.fields\.RichTextField',])
     
-
 
 class Category(models.Model):
     name = models.CharField(_('Name'), max_length=80)
@@ -96,9 +89,9 @@ class Forum(models.Model):
         return _get_cached_prop_val(self, '_post_count', _get_post_count_inner)
     post_count = property(_get_post_count)
 
-    @appmodels.permalink
+    @models.permalink
     def get_absolute_url(self):
-        return ('forum', 'feincmsforum.urls', (self.id,), {})
+        return ('forum_forum', (self.id,))
 
     @property
     def posts(self):
@@ -144,9 +137,9 @@ class Topic(models.Model):
     def reply_count(self):
         return self.post_count - 1
 
-    @appmodels.permalink
+    @models.permalink
     def get_absolute_url(self):
-        return ('topic', 'feincmsforum.urls', (self.id,), {})
+        return ('forum_topic', (self.id,))
 
     def update_read(self, user):
         tracking = user.posttracking
@@ -190,7 +183,7 @@ class Post(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('djangobb:post', [self.id])
+        return ('forum_post', (self.id,))
     
     def _get_body_html(self):
         val = convert_text_to_html(self.body)

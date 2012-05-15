@@ -1,4 +1,4 @@
-{% load i18n forum_extras gravatar %}
+{% load i18n forum_extras gravatar applicationcontent_tags %}
 <div class="postleft">
 	<div>
 	  <a href="javascript:pasteN('{{ post.user.username }}');">
@@ -41,7 +41,7 @@
 		{% endcomment %}
 	</dl>
 	<div class="submit">
-		<a href="{% url djangobb:mailto post.user.username %}">
-			{% trans "Send e-mail" %}</a>
+		{% app_reverse "forum_mailto" "feincmsforum.urls" post.user.username as mailtoURL %}
+		<a href="{{mailtoURL}}">{% trans "Send e-mail" %}</a>
 	</div>
 </div>

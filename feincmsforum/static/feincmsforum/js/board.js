@@ -59,3 +59,37 @@ function pasteN(text) {
 	insertAtCaret(document.forms['post']['body'], "[b]" + text + "[/b]\n");
 }
 
+function asyncAction(url, callback) {
+	$.ajax({
+		type: "POST",
+		url: url,
+		dataType: "json",
+		success: callback,
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			cnt = "reqest" + XMLHttpRequest + "\nstatus:" + textStatus + "\nerror:" + errorThrown;
+			alert(cnt);
+		}
+	});
+}
+
+function switchAction(url, node) {
+	asyncAction(url, function(res) {
+		node.innerHTML = res.msg;
+	});
+}
+
+function deleteAction(url, nodeToRemove, question) {
+	if(confirm(question) == true) {
+		asyncAction(url, function(res) {
+			if(res.redir == undefined) {
+				removePost(nodeToRemove);
+			} else {
+				window.location = res.redir;
+			}
+		});
+	}
+}
+
+function removePost(node) {
+	$('#'+node).remove();
+}
