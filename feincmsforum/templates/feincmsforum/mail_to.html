@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block breadcrumb %}{{ block.super }}
-<li>&raquo; <a href="{% url djangobb:index %}">{% trans 'Forums' %}</a></li>
+<li>&raquo; <a href="{% url forum_index %}">{% trans 'Forums' %}</a></li>
 <li class="selected">&raquo; {% trans "Send e-mail to" %} {{ mailto }}</li>
 {% endblock %}
 
@@ -17,6 +17,7 @@
 		{% csrf_token %}
 		<div class="inform">
 			<div class="infldset txtarea">
+				{{ form.next_page }}
 				<label>{{ form.subject.label }}<br />
 				{{ form.subject }}<br /></label>
 				<label>{{ form.body.label }}<br />

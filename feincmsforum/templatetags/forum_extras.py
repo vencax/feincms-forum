@@ -56,50 +56,53 @@ class ForumTimeNode(template.Node):
         return formated_time
 
 
-# TODO: this old code requires refactoring
 @register.inclusion_tag('feincmsforum/pagination.html',takes_context=True)
 def pagination(context, adjacent_pages=1):
     """
     Return the list of A tags with links to pages.
     """
-    page_range = range(
-        max(1, context['page'] - adjacent_pages),
-        min(context['pages'], context['page'] + adjacent_pages) + 1)
-    previous = None
-    next_p = None
-
-    if not 1 == context['page']:
-        previous = context['page'] - 1
-
-    if not 1 in page_range:
-        page_range.insert(0,1)
-        if not 2 in page_range:
-            page_range.insert(1,'.')
-
-    if not context['pages'] == context['page']:
-        next_p = context['page'] + 1
-
-    if not context['pages'] in page_range:
-        if not context['pages'] - 1 in page_range:
-            page_range.append('.')
-        page_range.append(context['pages'])
-    get_params = '&'.join(['%s=%s' % (x[0], x[1]) for x in
-        context['request'].GET.iteritems() if (x[0] != 'page' and x[0] != 'per_page')])
-    if get_params:
-        get_params = '?%s&' % get_params
-    else:
-        get_params = '?'
-
     return {
-        'get_params': get_params,
-        'previous': previous,
-        'next': next_p,
-        'page': context['page'],
-        'pages': context['pages'],
-        'page_range': page_range,
-        'results_per_page': context['results_per_page'],
-        'is_paginated': context['is_paginated'],
-        }
+        'paginator' : context['paginator'],
+        'page' : context['page_obj']
+    }
+#    page_range = range(
+#        max(1, context['page'] - adjacent_pages),
+#        min(context['pages'], context['page'] + adjacent_pages) + 1)
+#    previous = None
+#    next_p = None
+#
+#    if not 1 == context['page']:
+#        previous = context['page'] - 1
+#
+#    if not 1 in page_range:
+#        page_range.insert(0,1)
+#        if not 2 in page_range:
+#            page_range.insert(1,'.')
+#
+#    if not context['pages'] == context['page']:
+#        next_p = context['page'] + 1
+#
+#    if not context['pages'] in page_range:
+#        if not context['pages'] - 1 in page_range:
+#            page_range.append('.')
+#        page_range.append(context['pages'])
+#    get_params = '&'.join(['%s=%s' % (x[0], x[1]) for x in
+#        context['request'].GET.iteritems() if (x[0] != 'page' and x[0] != 'per_page')])
+#    if get_params:
+#        get_params = '?%s&' % get_params
+#    else:
+#        get_params = '?'
+#
+#    return {
+#        'get_params': get_params,
+#        'previous': previous,
+#        'next': next_p,
+#        'page': context['page'],
+#        'pages': context['pages'],
+#        'page_range': page_range,
+#        'results_per_page': context['results_per_page'],
+#        'is_paginated': context['is_paginated'],
+#        }
 
 @register.filter
 def has_unreads(topic, user):
@@ -118,8 +121,6 @@ def has_unreads(topic, user):
                 return False
         return True
 
-
-
 @register.filter
 def forum_moderated_by(topic, user):
     """
@@ -136,7 +137,6 @@ def forum_editable_by(post, user):
     """
     Check if the post could be edited by the user.
     """
-
     if user.is_superuser:
         return True
     if post.user == user:

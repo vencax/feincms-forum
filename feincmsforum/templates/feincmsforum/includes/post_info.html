@@ -42,6 +42,6 @@
 	</dl>
 	<div class="submit">
 		{% app_reverse "forum_mailto" "feincmsforum.urls" post.user.username as mailtoURL %}
-		<a href="{{mailtoURL}}">{% trans "Send e-mail" %}</a>
+		<a href="{{mailtoURL}}?nexpage={{topic.get_absolute_url}}">{% trans "Send e-mail" %}</a>
 	</div>
 </div>

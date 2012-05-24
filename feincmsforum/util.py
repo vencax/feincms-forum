@@ -2,8 +2,6 @@ import re
 from HTMLParser import HTMLParser
 from postmarkup import render_bbcode
 
-from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.http import HttpResponse, Http404
 from django.utils.functional import Promise
 from django.utils.translation import force_unicode, check_for_language
@@ -13,114 +11,31 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.sites.models import Site
 
 from . import settings as forum_settings
-from django.utils import simplejson
 
 
 #compile smiles regexp
 _SMILES = [(re.compile(smile_re), path) for smile_re, path in forum_settings.SMILES]
 
 
-def render_to(template):
-    """
-    Decorator for Django views that sends returned dict to render_to_response function.
-
-    Template name can be decorator parameter or TEMPLATE item in returned dictionary.
-    RequestContext always added as context instance.
-    If view doesn't return dict then decorator simply returns output.
-
-    Parameters:
-     - template: template name to use
-
-    Examples:
-    # 1. Template name in decorator parameters
-
-    @render_to('template.html')
-    def foo(request):
-        bar = Bar.object.all()  
-        return {'bar': bar}
-
-    # equals to 
-    def foo(request):
-        bar = Bar.object.all()  
-        return render_to_response('template.html', 
-                                  {'bar': bar}, 
-                                  context_instance=RequestContext(request))
-
-    # 2. Template name as TEMPLATE item value in return dictionary
-
-    @render_to()
-    def foo(request, category):
-        template_name = '%s.html' % category
-        return {'bar': bar, 'TEMPLATE': template_name}
-    
-    #equals to
-    def foo(request, category):
-        template_name = '%s.html' % category
-        return render_to_response(template_name, 
-                                  {'bar': bar}, 
-                                  context_instance=RequestContext(request))
-    """
-
-    def renderer(function):
-        def wrapper(request, *args, **kwargs):
-            output = function(request, *args, **kwargs)
-            if not isinstance(output, dict):
-                return output
-            tmpl = output.pop('TEMPLATE', template)
-            return render_to_response(tmpl, output, context_instance=RequestContext(request))
-        return wrapper
-    return renderer
-
-
 def absolute_url(path):
     return 'http://%s%s' % (Site.objects.get_current().domain, path)
 
 
-def paged(paged_list_name, per_page):
+class FeincmsForumMixin(object):
     """
-    Parse page from GET data and pass it to view. Split the
-    query set returned from view.
+    Class that decides if to render whole page or appropirate
+    feincms application content part.
     """
+    def get_context_data(self, **kwargs):
+        kwargs.update({'view': self})
+        return super(FeincmsForumMixin, self).get_context_data(**kwargs)
 
-    def decorator(func):
-        def wrapper(request, *args, **kwargs):
-            result = func(request, *args, **kwargs)
-            if not isinstance(result, dict) or 'paged_qs' not in result:
-                return result
-            try:
-                page = int(request.GET.get('page', 1))
-            except ValueError:
-                page = 1
+    def render_to_response(self, context, **response_kwargs):
+        if 'app_config' in getattr(self.request, '_feincms_extra_context', {}):
+            return self.get_template_names(), context
 
-            real_per_page = per_page
-
-            #if per_page_var:
-                #try:
-                    #value = int(request.GET[per_page_var])
-                #except (ValueError, KeyError):
-                    #pass
-                #else:
-                    #if value > 0:
-                        #real_per_page = value
-
-            paginator = Paginator(result['paged_qs'], real_per_page)
-            try:
-                page_obj = paginator.page(page)
-            except (InvalidPage, EmptyPage):
-                raise Http404
-            result[paged_list_name] = page_obj.object_list
-            result['is_paginated'] = page_obj.has_other_pages(),
-            result['page_obj'] = page_obj,
-            result['page'] = page
-            result['page_range'] = paginator.page_range,
-            result['pages'] = paginator.num_pages
-            result['results_per_page'] = paginator.per_page,
-            result['request'] = request
-            return result
-        return wrapper
-
-    return decorator
-
+        return super(FeincmsForumMixin, self).render_to_response(
+            context, **response_kwargs)
 
 class LazyJSONEncoder(JSONEncoder):
     """

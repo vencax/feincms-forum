@@ -205,3 +205,4 @@ class MailToForm(forms.Form):
                                                             'class':'longinput'}))
     body = forms.CharField(required=False, label=_('Message'), 
                                widget=forms.Textarea(attrs={'rows':'10', 'cols':'75'}))
+    next_page = forms.CharField(widget=forms.HiddenInput())

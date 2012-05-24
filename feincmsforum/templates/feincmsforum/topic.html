@@ -1,23 +1,24 @@
-{% extends 'feincmsforum/base.html' %}
+{% extends "feincmsforum/base.html" %}
+
 {% load i18n forum_extras applicationcontent_tags fragment_tags %}
 
-{% block bbcontent %}
-
-{% fragment request "extrahead" %}
+{% block extrahead %}
+{{ block.super }}
 {{ form.media }}
 <script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/board.js"></script>
-{% endfragment %}
+{% endblock %}
 
-{% fragment request "extrabreadcrumbs" %}
+{% block breadcrumbs %}
+<li><a href="{{feincms_page.get_absolute_url}}">{{feincms_page.title}}</a></li>
 <li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a></li>
 <li class="selected">&raquo; {{ topic.name }}</li>
-{% endfragment %}
+{% endblock %}
 
-{% fragment request "title" %}{{ topic.forum.name }} / {{ topic.name }}{% endfragment %}
-{% fragment request "keywords" %}{{ topic.name }}{% endfragment %}
-{% fragment request "description" %}{{ topic.posts.0 }}body_html may not be NULL{% endfragment %}
+{% block title %}{{ topic.forum.name }} / {{ topic.name }}{% endblock %}
+{% block keywords %}{{ topic.name }}{% endblock %}
+{% block description %}{{ topic.posts.0 }}body_html may not be NULL{% endblock %}
 
-
+{% block bbcontent %}
 <ul class="right rhorizList">
 	<li><a href="{% url forum_topic_feed topic.id %}" class="icon rss"></a></li>
 	{% if not topic.closed and user.is_authenticated %}
@@ -39,7 +40,7 @@
 
 <h1>{{ topic.name }}</h1>
 
-<div>{% pagination %}</div>	
+<div>{% pagination %}</div>
 
 {% for post in posts %}
 <div id="p{{ post.id }}" class="blockpost">
@@ -102,6 +103,7 @@
 			{% endif %}
 			{% endcomment %}
 		</ul>
+		<br class="clearfix" />
 	  </div>
 	</div>
 </div>
@@ -126,8 +128,12 @@
 {% if moderator %}
 	<dl id="modcontrols">
 		<dt><span class="bold">{% trans "Moderator control" %}</span></dt>
-		{%comment%}{% app_reverse "forum_move_topic" "feincmsforum.urls" topic.id as moveTopicURL %}{%endcomment%}
-		{%comment%}<dd><a href="{{moveTopicURL}}">{% trans "Move topic" %}</a></dd>{%endcomment%}
+		{% app_reverse "forum_move_topic" "feincmsforum.urls" topic.id as moveTopicURL %}
+		<dd><a href="javascript: void(0)" 
+			onclick="prepareMove('{% url forum_topic_move_prepare topic.id %}', 
+				'{% url forum_topic_move topic.id %}', this);">
+			{% trans "Move topic" %}
+		</a></dd>
 	
 		<dd><a href="javascript: void(0)" 
 			onclick="switchAction('{% url open_close_topic topic.id %}', this);">

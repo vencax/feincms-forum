@@ -1,21 +1,18 @@
 {% load i18n %}
-{% if is_paginated %}
+{% if paginator.num_pages > 1 %}
 	{% trans "Pages" %}: 
-	{% if previous %}
-		<a href="{{ get_params }}page={{ previous }}{#&per_page={{ results_per_page }}#}">&laquo;</a>
+	{% if paginator.has_previous %}
+		<a href="?page={{ paginator.previous_page_number }}">&laquo;</a>
 	{% endif %}
-	{% for number in page_range %}
-		{% if number == "." %}
-		{% else %}
-			{% if number == page %}
-				<strong>{{ number }}</strong> 
-			{% endif %}
-			{% if number != page %}
-				<a href="{{ get_params }}page={{ number }}{#&per_page={{ results_per_page }}#}">{{ number }}</a>
-			{% endif %}
+	{% for number in paginator.page_range %}
+		{% if number == page.number %}
+			<strong>{{ number }}</strong> 
+		{% endif %}
+		{% if number != page.number %}
+			<a href="?page={{ number }}">{{ number }}</a>
 		{% endif %}
 	{% endfor %}
-	{% if next %} 
-		<a href="{{ get_params }}page={{ next }}{#&per_page={{ results_per_page }}#}">&raquo;</a>
+	{% if paginator.has_next %}
+		<a href="?page={{ paginator.next_page_number }}">&raquo;</a>
 	{% endif %}
 {% endif %}

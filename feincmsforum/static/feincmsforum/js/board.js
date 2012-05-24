@@ -59,11 +59,12 @@ function pasteN(text) {
 	insertAtCaret(document.forms['post']['body'], "[b]" + text + "[/b]\n");
 }
 
-function asyncAction(url, callback) {
+function asyncAction(url, data, callback) {
 	$.ajax({
 		type: "POST",
 		url: url,
 		dataType: "json",
+		data : data,
 		success: callback,
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			cnt = "reqest" + XMLHttpRequest + "\nstatus:" + textStatus + "\nerror:" + errorThrown;
@@ -73,14 +74,14 @@ function asyncAction(url, callback) {
 }
 
 function switchAction(url, node) {
-	asyncAction(url, function(res) {
+	asyncAction(url, '', function(res) {
 		node.innerHTML = res.msg;
 	});
 }
 
 function deleteAction(url, nodeToRemove, question) {
 	if(confirm(question) == true) {
-		asyncAction(url, function(res) {
+		asyncAction(url, '', function(res) {
 			if(res.redir == undefined) {
 				removePost(nodeToRemove);
 			} else {
@@ -92,4 +93,33 @@ function deleteAction(url, nodeToRemove, question) {
 
 function removePost(node) {
 	$('#'+node).remove();
+}
+
+function prepareMove(prepareUrl, moveUrl, node) {
+	asyncAction(prepareUrl, '', function(res) {
+		if($('#moveForm').length == 0) {
+			form = _createMoveForm(res.data, moveUrl);
+			$(node).after(form);
+		}
+	});
+}
+
+function moveTopic(url, targetForumId, form) {
+	asyncAction(url, 'forum_id=' + targetForumId, function(res) {
+		alert(res.msg);
+		$(form).remove();
+		window.location = res.redir;
+	});
+}
+
+function _createMoveForm(data, moveUrl) {
+	var form = $('<div id="moveForm"></div>');
+	for(var i = 0; i < data.length; i++) {
+		var parts = data[i].split('#');
+		
+		$(form).append($('<a href="">' + parts[1] + '</a>').click(function() {
+			moveTopic(moveUrl, parts[0]);
+		}));		
+	}
+	return form;
 }

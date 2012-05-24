@@ -13,6 +13,10 @@ urlpatterns = patterns('',
         forum_views.open_close_topic, name='open_close_topic'),
     url('^post/(?P<post_id>\d+)/delete/$', forum_views.delete_post, 
         name='delete_post'),
+    url('^topic/(?P<topic_id>\d+)/move_prepare/$', 
+        forum_views.prepare_move_topic, name='forum_topic_move_prepare'),
+    url('^topic/(?P<topic_id>\d+)/move/$', 
+        forum_views.move_topic, name='forum_topic_move'),
 
     url('^post/(?P<post_id>\d+)/$', forum_views.show_post, name='forum_post'),
     
