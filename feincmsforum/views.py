@@ -5,7 +5,7 @@ from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
@@ -14,7 +14,7 @@ from django.core.cache import cache
 from django.db.models import Q, F
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from models import Category, Forum, Topic, Post, Profile, PostTracking
 from forms import AddPostForm, EditPostForm,\
@@ -22,8 +22,7 @@ from forms import AddPostForm, EditPostForm,\
 from . import settings as forum_settings
 from templatetags.forum_extras import forum_moderated_by
 
-from .util import JsonResponse, FeincmsForumMixin, paged, build_form
-from django.template.loader import render_to_string
+from .util import JsonResponse, FeincmsForumMixin, build_form
 
 class IndexView(FeincmsForumMixin, TemplateView):
     template_name = 'feincmsforum/index.html'
@@ -283,43 +282,6 @@ def edit_post(request, post_id):
         'post': post,
     }
 
-#@login_required
-#@transaction.commit_on_success
-#@render_to('feincmsforum/move_topic.html')
-#def move_topic(request, topic_id):
-#    if 'topic_id' in request.GET:
-#        #if move only 1 topic
-#        topic_ids = [request.GET['topic_id']]
-#    else:
-#        topic_ids = request.POST.getlist('topic_id')
-#    first_topic = topic_ids[0]
-#    topic = get_object_or_404(Topic, pk=first_topic)
-#    from_forum = topic.forum
-#    if 'to_forum' in request.POST:
-#        to_forum_id = int(request.POST['to_forum'])
-#        to_forum = get_object_or_404(Forum, pk=to_forum_id)
-#        for topic_id in topic_ids:
-#            topic = get_object_or_404(Topic, pk=topic_id)
-#            if topic.forum != to_forum:
-#                if forum_moderated_by(topic, request.user):
-#                    topic.forum = to_forum
-#                    topic.save()
-#
-#        #TODO: not DRY
-#        try:
-#            last_post = Post.objects.filter(topic__forum__id=from_forum.id).latest()
-#        except Post.DoesNotExist:
-#            last_post = None
-#        from_forum.last_post = last_post
-#        from_forum.topic_count = from_forum.topics.count()
-#        from_forum.post_count = from_forum.posts.count()
-#        from_forum.save()
-#        return HttpResponseRedirect(to_forum.get_absolute_url())
-#
-#    return {'categories': Category.objects.all(),
-#            'topic_ids': topic_ids,
-#            'exclude_forum': from_forum,
-#            }
 
 @login_required
 @csrf_exempt
@@ -333,7 +295,8 @@ def prepare_move_topic(request, topic_id):
         return JsonResponse({'stat' : 'OK', 'data' : data})
     else:
         return JsonResponse({'stat' : 'FAIL',
-                             'msg' : _('you are not moderator of this topic')})
+                             'msg' : ugettext('you are not moderator of this topic')})
+        
 
 @login_required
 @csrf_exempt
@@ -345,11 +308,12 @@ def move_topic(request, topic_id):
         topic.forum = forum
         topic.save()
         return JsonResponse({'stat' : 'OK',
-                             'msg' : '%s %s' % (_('Forum moved to'), forum),
+                             'msg' : '%s %s' % (ugettext('Forum moved to'), forum),
                              'redir' : forum.get_absolute_url()})
     else:
         return JsonResponse({'stat' : 'FAIL',
-                             'msg' : _('you are not moderator of this topic')})
+                             'msg' : ugettext('you are not moderator of this topic')})
+        
 
 @login_required
 @csrf_exempt
@@ -360,12 +324,13 @@ def stick_unstick_topic(request, topic_id):
         topic.sticky = not topic.sticky
         topic.save()
         if topic.sticky:
-            return JsonResponse({'stat' : 'OK', 'msg' : _('Unstick topic')})
+            return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Unstick topic')})
         else:
-            return JsonResponse({'stat' : 'OK', 'msg' : _('Stick topic')})
+            return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Stick topic')})
     else:
         return JsonResponse({'stat' : 'FAIL',
-                             'msg' : _('you are not moderator of this topic')})
+                             'msg' : ugettext('you are not moderator of this topic')})
+        
 
 @login_required
 @csrf_exempt
@@ -386,7 +351,7 @@ def delete_post(request, post_id):
 
     if not allowed:
         return JsonResponse({'stat' : 'FAIL',
-                             'msg' : _('you are not moderator of this topic')})
+                             'msg' : ugettext('you are not moderator of this topic')})
 
     post.delete()
 
@@ -397,7 +362,7 @@ def delete_post(request, post_id):
         return JsonResponse({'stat' : 'OK',
                              'redir' : forum.get_absolute_url()})
     else:
-        return JsonResponse({'stat' : 'OK', 'msg' : _('post deleted')})
+        return JsonResponse({'stat' : 'OK', 'msg' : ugettext('post deleted')})
 
 
 @login_required
@@ -409,12 +374,12 @@ def open_close_topic(request, topic_id):
         topic.closed = not topic.closed
         topic.save()
         if topic.closed:
-            return JsonResponse({'stat' : 'OK', 'msg' : _('Open topic')})
+            return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Open topic')})
         else:
-            return JsonResponse({'stat' : 'OK', 'msg' : _('Close topic')})
+            return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Close topic')})
     else:
         return JsonResponse({'stat' : 'FAIL',
-                             'msg' : _('you are not moderator of this topic')})
+                             'msg' : ugettext('you are not moderator of this topic')})
 
 
 @login_required
@@ -424,7 +389,7 @@ def switch_subscription(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if request.user in topic.subscribers.all():
         topic.subscribers.remove(request.user)
-        return JsonResponse({'stat' : 'OK', 'msg' : _('Subscribe')})
+        return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Subscribe')})
     else:
         topic.subscribers.add(request.user)
-        return JsonResponse({'stat' : 'OK', 'msg' : _('Unsubscribe')})
+        return JsonResponse({'stat' : 'OK', 'msg' : ugettext('Unsubscribe')})

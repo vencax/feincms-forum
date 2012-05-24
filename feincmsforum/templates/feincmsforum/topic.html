@@ -126,25 +126,24 @@
 {% jumpto topic %}
 
 {% if moderator %}
-	<dl id="modcontrols">
-		<dt><span class="bold">{% trans "Moderator control" %}</span></dt>
-		{% app_reverse "forum_move_topic" "feincmsforum.urls" topic.id as moveTopicURL %}
-		<dd><a href="javascript: void(0)" 
-			onclick="prepareMove('{% url forum_topic_move_prepare topic.id %}', 
-				'{% url forum_topic_move topic.id %}', this);">
-			{% trans "Move topic" %}
-		</a></dd>
-	
-		<dd><a href="javascript: void(0)" 
-			onclick="switchAction('{% url open_close_topic topic.id %}', this);">
-			{% if topic.closed %}{% trans "Open topic" %}{% else %}{% trans "Close topic" %}{% endif %}
-		</a></dd>	
-	
-		<dd><a href="javascript: void(0)" 
-			onclick="switchAction('{% url stick_unstick_topic topic.id %}', this);">
-			{% if topic.sticky %}{% trans "Unstick topic" %}{% else %}{% trans "Stick topic" %}{% endif %}
-		</a></dd>	
-	</dl>
+<dl id="modcontrols">
+	<dt><span class="bold">{% trans "Moderator control" %}</span></dt>
+	<dd><a href="javascript: void(0)" 
+		onclick="prepareMove('{% url forum_topic_move_prepare topic.id %}', 
+			'{% url forum_topic_move topic.id %}', this);">
+		{% trans "Move topic" %}
+	</a></dd>
+
+	<dd><a href="javascript: void(0)" 
+		onclick="switchAction('{% url open_close_topic topic.id %}', this);">
+		{% if topic.closed %}{% trans "Open topic" %}{% else %}{% trans "Close topic" %}{% endif %}
+	</a></dd>	
+
+	<dd><a href="javascript: void(0)" 
+		onclick="switchAction('{% url stick_unstick_topic topic.id %}', this);">
+		{% if topic.sticky %}{% trans "Unstick topic" %}{% else %}{% trans "Stick topic" %}{% endif %}
+	</a></dd>	
+</dl>
 {% endif %}
 
 {% endblock %}

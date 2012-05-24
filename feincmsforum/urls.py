@@ -21,7 +21,6 @@ urlpatterns = patterns('',
         name='forum_topic'),
     url('^(?P<forum_id>\d+)/add/$', forum_views.create_topic, 
         name='forum_add_topic'),
-    url('^topic/move/(?P<topic_id>\d+)/$', forum_views.move_topic, name='forum_move_topic'),
 
     # Post
     url('^(?P<forum_id>\d+)/(?P<topic_id>\d+)/post/add/$', forum_views.add_post,

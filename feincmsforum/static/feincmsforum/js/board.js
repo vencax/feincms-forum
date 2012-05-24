@@ -98,27 +98,35 @@ function removePost(node) {
 function prepareMove(prepareUrl, moveUrl, node) {
 	asyncAction(prepareUrl, '', function(res) {
 		if($('#moveForm').length == 0) {
-			form = _createMoveForm(res.data, moveUrl);
-			$(node).after(form);
+			if(res.stat == 'OK') {
+				form = _createMoveForm(res.data, moveUrl);
+				$(node).after(form);
+			} else {
+				alert(res.msg);
+			}
 		}
 	});
 }
 
-function moveTopic(url, targetForumId, form) {
-	asyncAction(url, 'forum_id=' + targetForumId, function(res) {
-		alert(res.msg);
-		$(form).remove();
-		window.location = res.redir;
+function moveTopic(moveUrl, targetForumId, form) {
+	asyncAction(moveUrl, 'forum_id=' + targetForumId, function(res) {
+		if(res.stat == 'OK') {
+			alert(res.msg);
+			form.remove();
+			window.location = res.redir;
+		} else {
+			alert(res.msg);
+		}
 	});
 }
 
-function _createMoveForm(data, moveUrl) {
+function _createMoveForm(data, moveUrl) {	
 	var form = $('<div id="moveForm"></div>');
 	for(var i = 0; i < data.length; i++) {
 		var parts = data[i].split('#');
 		
-		$(form).append($('<a href="">' + parts[1] + '</a>').click(function() {
-			moveTopic(moveUrl, parts[0]);
+		$(form).append($('<a href="javascript: void(0)">' + parts[1] + '</a>').click(function() {
+			moveTopic(moveUrl, parts[0], form);
 		}));		
 	}
 	return form;
