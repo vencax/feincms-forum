@@ -11,7 +11,9 @@
 <div id="idx1" class="blocktable">
 {% for iter in cats %}
 	<div id="category_head_{{ iter.id }}" class="ui-widget-header categoryhead">
+		<a href="{% url forum_category_feed iter.cat.id %}" class="rss icon right"></a>
 		<span>{{ iter.cat }}</span>
+		
 	</div>
 	<div id="category_body_{{ iter.id }}">
 		<table cellspacing="0">

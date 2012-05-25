@@ -1,17 +1,17 @@
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.utils.feedgenerator import Atom1Feed
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from django.http import Http404
+from feincms.content.application.models import app_reverse
 
 from models import Post, Topic, Forum, Category
 
 class ForumFeed(Feed):
     feed_type = Atom1Feed
 
-    def link(self):
-        return reverse('djangobb:index')
+    def link(self):        
+        return app_reverse('forum_index', 'feincmsforum.urls')
 
     def item_guid(self, obj):
         return str(obj.id)

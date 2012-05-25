@@ -19,7 +19,9 @@
 {% block description %}{{ topic.posts.0 }}body_html may not be NULL{% endblock %}
 
 {% block bbcontent %}
-<ul class="right rhorizList">
+<h1>{{ topic.name }}</h1>
+
+<ul class="pagetools rhorizList">
 	<li><a href="{% url forum_topic_feed topic.id %}" class="icon rss"></a></li>
 	{% if not topic.closed and user.is_authenticated %}
 	{% app_reverse "forum_add_post" "feincmsforum.urls" topic.forum.id topic.id as addPostURL %}
@@ -37,8 +39,6 @@
 		</a></li>
 	{% endif %}
 </ul>
-
-<h1>{{ topic.name }}</h1>
 
 <div>{% pagination %}</div>
 
