@@ -2,31 +2,32 @@ from django.core.management.base import BaseCommand
 from .export_models.phpbb import PhpBBUser
 from django.contrib.auth.models import User
 from django.db.transaction import commit_on_success
-from feincmsforum.management.commands.export_models.phpbb import PhpBBForum,\
-    PhpBBTopic, PhpBBPost, PhpBBGroup
-from feincmsforum.models import Category, Forum, Topic, Post
 import datetime
 import logging
-from leaf import Parser
+from django.conf import settings
 
-try:
-    import leaf
-except:
-    print 'you need python leaf, use: easy_install leaf'
+from .export_models.phpbb import PhpBBForum,\
+    PhpBBTopic, PhpBBPost, PhpBBGroup
+from feincmsforum.models import Category, Forum, Topic, Post
+from .import_util import BaseImporter, prepareImport
+
 
 class Command(BaseCommand):
     """
     First import the PhpBB DB backup:
     mysql -u <dbuser> -p <dbname> --default-character-set=utf8 < <backupfile>
+    NOTE: do not forget to add router to settings:
+    settings.DATABASE_ROUTERS = ['feincmsforum.routers.PHPBBRouter']
     """
     help = u'Imports phpbb sql dump'
 
     def handle(self, *args, **options):
-        logging.basicConfig(level = logging.INFO)
-#        UserImporter().doImport()
-#        CategoryImporter().doImport()
-#        ForumImporter().doImport()
-#        TopicImporter().doImport()
+        logging.basicConfig(level = logging.INFO)        
+        prepareImport()
+        UserImporter().doImport()
+        CategoryImporter().doImport()
+        ForumImporter().doImport()
+        TopicImporter().doImport()
         PostImporter().doImport()
 
 # ------------------------ importers ------------------------------------------
@@ -35,15 +36,7 @@ def processmoderators():
     gm = PhpBBGroup.objects.filter(group_name__exact='GLOBAL_MODERATORS')
     mods = []
 
-class BaseImporter(object):
-    def doImport(self):
-        objects = self.get_queryset()
-        for o in objects:
-            try:
-                logging.info('Processing %s' % o)
-                self.processObject(o)
-            except Exception, e:
-                logging.exception(e)
+class BasePhpBBImporter(BaseImporter):
                 
     def _getAuthor(self, o, bbUser=None):
         if bbUser == None:
@@ -51,10 +44,11 @@ class BaseImporter(object):
         return User.objects.get(email=bbUser.user_email)
 
 
-class UserImporter(BaseImporter):
+class UserImporter(BasePhpBBImporter):
     def get_queryset(self):
         return PhpBBUser.objects.all()\
                     .exclude(username__icontains='[bot]')\
+                    .exclude(username__icontains='[Bot]')\
                     .exclude(username__icontains='[Google]')\
                     .exclude(username__icontains='[crawler]')\
                     .exclude(username__icontains='[spider]')\
@@ -67,7 +61,7 @@ class UserImporter(BaseImporter):
                  email=o.user_email).save()
 
 
-class CategoryImporter(BaseImporter):
+class CategoryImporter(BasePhpBBImporter):
     def get_queryset(self):
         return PhpBBForum.objects.filter(parent_id__exact=0)
 
@@ -77,7 +71,7 @@ class CategoryImporter(BaseImporter):
             Category(name=o.forum_name).save()
 
 
-class ForumImporter(BaseImporter):
+class ForumImporter(BasePhpBBImporter):
     def get_queryset(self):
         return PhpBBForum.objects.all().exclude(parent_id__exact=0)
 
@@ -94,7 +88,7 @@ class ForumImporter(BaseImporter):
                   name=o.forum_name).save()
 
 
-class TopicImporter(BaseImporter):
+class TopicImporter(BasePhpBBImporter):
     def get_queryset(self):
         return PhpBBTopic.objects.all()
 
@@ -108,16 +102,19 @@ class TopicImporter(BaseImporter):
             Topic(forum=forum, views=o.topic_views, created=createdtime,
                   name=o.topic_title, user=author).save()
 
-class PostImporter(BaseImporter):
+class PostImporter(BasePhpBBImporter):
     def get_queryset(self):
         return PhpBBPost.objects.all()
 
     @commit_on_success
     def processObject(self, o):
-        if not Post.objects.filter(body__icontains=o.post_text).exists():
+        if not Post.objects.filter(body__iexact=o.post_text).exists():
             author = self._getAuthor(o, o.poster)
             created = datetime.datetime.fromtimestamp(o.post_time)
-            topic = Topic.objects.get(name=o.topic.topic_title)
+            try:
+                topic = Topic.objects.get(name=o.topic.topic_title)
+            except Topic.DoesNotExist:
+                
 #            text = unicode(leaf.parse(unicode(o.post_text)))
             
             Post(topic=topic, body=unicode(o.post_text), user_ip=o.poster_ip,
