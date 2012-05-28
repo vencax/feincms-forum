@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db.transaction import commit_on_success
 import datetime
 import logging
-from django.conf import settings
 
 from .export_models.phpbb import PhpBBForum,\
     PhpBBTopic, PhpBBPost, PhpBBGroup
@@ -22,7 +21,7 @@ class Command(BaseCommand):
     help = u'Imports phpbb sql dump'
 
     def handle(self, *args, **options):
-        logging.basicConfig(level = logging.INFO)        
+        logging.basicConfig(level = logging.INFO)
         prepareImport()
         UserImporter().doImport()
         CategoryImporter().doImport()
@@ -37,7 +36,7 @@ def processmoderators():
     mods = []
 
 class BasePhpBBImporter(BaseImporter):
-                
+
     def _getAuthor(self, o, bbUser=None):
         if bbUser == None:
             bbUser = PhpBBUser.objects.get(pk=o.topic_poster)
@@ -114,8 +113,8 @@ class PostImporter(BasePhpBBImporter):
             try:
                 topic = Topic.objects.get(name=o.topic.topic_title)
             except Topic.DoesNotExist:
-                
+                topic = Topic.objects.get(name__icontains=o.topic.topic_title)
 #            text = unicode(leaf.parse(unicode(o.post_text)))
-            
+
             Post(topic=topic, body=unicode(o.post_text), user_ip=o.poster_ip,
                  user=author, created=created).save()
