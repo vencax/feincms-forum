@@ -54,3 +54,23 @@ float: left; width: 150px; overflow: hidden; }
 	padding: 10px;
 	margin-bottom: 10px; 
 }
+
+/* emoticons */
+.ei_smile, .ei_neutral, .ei_sad, .ei_big_smile, 
+.ei_yikes, .ei_wink, .ei_hmm, .ei_tongue, .ei_lol, 
+.ei_mad, .ei_roll, .ei_cool { width: 16px; height:16px;
+	display: inline-block; background-position: center;
+}
+
+.ei_smile { background-image: url(smilies/ei_smile.png); }
+.ei_neutral { background-image: url(smilies/ei_neutral.png); }
+.ei_sad { background-image: url(smilies/ei_sad.png); }
+.ei_big_smile { background-image: url(smilies/ei_big_smile.png); }
+.ei_yikes { background-image: url(smilies/ei_yikes.png); }
+.ei_wink { background-image: url(smilies/ei_wink.png); }
+.ei_hmm { background-image: url(smilies/ei_hmm.png); }
+.ei_tongue { background-image: url(smilies/ei_tongue.png); }
+.ei_lol { background-image: url(smilies/ei_lol.png); } 
+.ei_mad { background-image: url(smilies/ei_mad.png); }
+.ei_roll { background-image: url(smilies/ei_roll.png); }
+.ei_cool { background-image: url(smilies/ei_cool.png); }

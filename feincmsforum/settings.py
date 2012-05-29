@@ -53,7 +53,7 @@ SMILES = ((r'(:|=)\)', EMOTION_SMILE), #:), =)
           (r'(:|=)D', EMOTION_BIG_SMILE), #:D, =D
           (r':o', EMOTION_YIKES), # :o, :O
           (r';\)', EMOTION_WINK), # ;\ 
-          (r':/', EMOTION_HMM), #:/
+          (r':/|:unsure:', EMOTION_HMM), #:/
           (r':P', EMOTION_TONGUE), # :P
           (r':lol:', EMOTION_LOL),
           (r':mad:', EMOTION_MAD),
