@@ -28,6 +28,7 @@ class IndexView(FeincmsForumMixin, TemplateView):
     template_name = 'feincmsforum/index.html'
 
     def get(self, request, *args, **kwargs):
+        catId = kwargs.get('cat_id', None)
         users_cached = cache.get('users_online', {})
         users_online = users_cached and User.objects.filter(id__in = users_cached.keys()) or []
         guests_cached = cache.get('guests_online', {})
@@ -41,9 +42,11 @@ class IndexView(FeincmsForumMixin, TemplateView):
             user_groups = []
         _forums = Forum.objects.filter(
                 Q(category__groups__in=user_groups) | \
-                Q(category__groups__isnull=True)).select_related('last_post__topic',
-                                                                'last_post__user',
-                                                                'category')
+                Q(category__groups__isnull=True))
+        if catId:
+            _forums = _forums.filter(category__id__in=[int(catId)])
+        _forums = _forums.select_related('last_post__topic', 'last_post__user', 
+                                         'category')
         for forum in _forums:
             cat = cats.setdefault(forum.category.id,
                 {'id': forum.category.id, 'cat': forum.category, 'forums': []})

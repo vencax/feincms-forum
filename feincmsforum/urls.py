@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 
     # Forum
     url('^$', forum_views.IndexView.as_view(), name='forum_index'),
+    url('^cat_(?P<cat_id>\d+)/$', forum_views.IndexView.as_view(), 
+        name='forum_category'),
     url('^(?P<forum_id>\d+)/$', forum_views.ShowForumView.as_view(), 
         name='forum_forum'),
     url('^report/(?P<post_id>\d+)/$', forum_views.report, name='forum_report'),

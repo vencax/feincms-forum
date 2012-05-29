@@ -52,6 +52,21 @@ class Category(models.Model):
                 return False
         return True
 
+try:
+    from feincms.module.page.extensions.navigation import NavigationExtension, PagePretender
+    from feincms.content.application.models import app_reverse
+    class ForumCategoriesNavigationExtension(NavigationExtension):
+        name = _('forum categories')
+    
+        def children(self, page, **kwargs):
+            for category in Category.objects.all():
+                yield PagePretender(
+                    title=category.name,
+                    url=app_reverse('forum_category', 'feincmsforum.urls', kwargs={
+                        'cat_id': category.id,
+                    }))
+except:
+    pass
 
 class Forum(models.Model):
     category = models.ForeignKey(Category, related_name='forums', verbose_name=_('Category'))
