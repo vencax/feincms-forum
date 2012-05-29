@@ -48,6 +48,7 @@ class KunenaPost(models.Model):
     subject = models.CharField()
     email = models.CharField()
     name = models.CharField()
+    thread = models.IntegerField()
     ip = models.IPAddressField()
     time = models.DateTimeField()
     hits = models.IntegerField()

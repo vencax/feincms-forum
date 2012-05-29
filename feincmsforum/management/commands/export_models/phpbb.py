@@ -13,9 +13,9 @@ class PhpBBUser(models.Model):
 
     user_id = models.IntegerField(primary_key=True)
     user_email = models.EmailField()
-    username = models.CharField()
-
-    def __unicode__(self): return 'PhpBBUser %s' % self.username
+    username_clean = models.CharField()
+    
+    def __unicode__(self): return 'PhpBBUser %s' % self.username_clean
 
 
 class PhpBBGroup(models.Model):
