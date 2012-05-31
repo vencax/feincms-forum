@@ -17,9 +17,10 @@
 			{{ post.user.forum_profile.group }}
 			{% endif %}
 		</dd>
-		<dd class="postavatar">
-			<img src="{% gravatar_for_user post.user 70 %}" 
-				alt="avatar img" class="avatar" />
+		<dd class="postavatar" id="avatar{{ forloop.counter }}">
+			<script type="text/javascript">
+				loadAvatar("avatar{{ forloop.counter }}", "{% gravatar_for_user post.user 70 %}");
+			</script>
 		</dd>
 		
 		<dd class="authority">{{ post.user|forum_authority }}</dd>

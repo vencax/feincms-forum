@@ -91,6 +91,17 @@ function deleteAction(url, nodeToRemove, question) {
 	}
 }
 
+function loadAvatar(parentId, imgSrc) {
+	var img = $("<img />").attr('src', imgSrc).attr('class', 'avatar')
+    .load(function() {
+       if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+           alert('broken image!');
+       } else {
+           $('#' + parentId).append(img);
+       }
+    });
+}
+
 function removePost(node) {
 	$('#'+node).remove();
 }
