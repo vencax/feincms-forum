@@ -16,45 +16,45 @@ tinyMCE.init({
 
 var txt = ''
 
-function copyQ(nick) { 
-	txt = '' 
+function copyQ(nick) {
+	txt = ''
 	if (document.getSelection) {
 		txt = document.getSelection()
-	} else 
+	} else
 	if (document.selection) {
 		txt = document.selection.createRange().text;
-	} 
+	}
 	txt = '[quote]' + nick + ':\n' + txt + '[/quote]\n'
 }
 
-function insertAtCaret (textObj, textFieldValue) { 
-	if (document.all) { 
-		if (textObj.createTextRange && textObj.caretPos && !window.opera) { 
-			var caretPos = textObj.caretPos; 
-			caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ?textFieldValue + ' ' : textFieldValue; 
-		} else { 
-			textObj.value += textFieldValue; 
-		} 
-	} else { 
-		if (textObj.selectionStart) { 
-			var rangeStart = textObj.selectionStart; 
-			var rangeEnd = textObj.selectionEnd; 
-			var tempStr1 = textObj.value.substring(0, rangeStart); 
-			var tempStr2 = textObj.value.substring(rangeEnd, textObj.value.length); 
-			textObj.value = tempStr1 + textFieldValue + tempStr2; 
+function insertAtCaret (textObj, textFieldValue) {
+	if (document.all) {
+		if (textObj.createTextRange && textObj.caretPos && !window.opera) {
+			var caretPos = textObj.caretPos;
+			caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ?textFieldValue + ' ' : textFieldValue;
+		} else {
+			textObj.value += textFieldValue;
+		}
+	} else {
+		if (textObj.selectionStart) {
+			var rangeStart = textObj.selectionStart;
+			var rangeEnd = textObj.selectionEnd;
+			var tempStr1 = textObj.value.substring(0, rangeStart);
+			var tempStr2 = textObj.value.substring(rangeEnd, textObj.value.length);
+			textObj.value = tempStr1 + textFieldValue + tempStr2;
 			textObj.selectionStart = textObj.selectionEnd = rangeStart + textFieldValue.length;
-		} else { 
-			textObj.value += textFieldValue; 
-		} 
-	} 
+		} else {
+			textObj.value += textFieldValue;
+		}
+	}
 }
 
 function pasteQ() {
-	if (txt!='' && document.forms['post']['body']) 
-	insertAtCaret(document.forms['post']['body'], txt); 
-} 
+	if (txt!='' && document.forms['post']['body'])
+	insertAtCaret(document.forms['post']['body'], txt);
+}
 
-function pasteN(text) { 
+function pasteN(text) {
 	if (text != '' && document.forms['post']['body'])
 	insertAtCaret(document.forms['post']['body'], "[b]" + text + "[/b]\n");
 }
@@ -120,14 +120,22 @@ function moveTopic(moveUrl, targetForumId, form) {
 	});
 }
 
-function _createMoveForm(data, moveUrl) {	
+function _createMovebutton(moveUrl, form, ul, forumId, forumName) {
+	var butt = $('<a href="javascript: void(0)">' + forumName + '</a>').click(function() {
+		moveTopic(moveUrl, forumId, form);
+	});
+	var li = $('<li></li>');
+	$(ul).append(li);
+	$(li).append(butt);
+}
+
+function _createMoveForm(data, moveUrl) {
 	var form = $('<div id="moveForm"></div>');
+	var ul = $('<ul style="list-style-type: square; padding-left: 20px;"></ul>');
+	$(form).append(ul);
 	for(var i = 0; i < data.length; i++) {
 		var parts = data[i].split('#');
-		
-		$(form).append($('<a href="javascript: void(0)">' + parts[1] + '</a>').click(function() {
-			moveTopic(moveUrl, parts[0], form);
-		}));		
+		_createMovebutton(moveUrl, form, ul, parts[0], parts[1]);
 	}
 	return form;
 }
