@@ -50,17 +50,19 @@ class BasePhpBBImporter(BaseImporter):
             return User.objects.get(username__iexact=bbUser.username_clean)
 
     def _get_parent(self, cat):
-        if cat.parent == 0:
+        if cat.parent_id == 0:
             return None
         else:
-            return PhpBBForum.objects.get(pk=cat.parent)
+            return PhpBBForum.objects.get(pk=cat.parent_id)
 
     def _find_root(self, cat):
         curr = self._get_parent(cat)
-        while curr.parent != 0:
+        while curr.parent_id != 0:
             curr = self._get_parent(curr)
         return curr
-
+    
+    def _get_forumName(self, o):
+        return unicode(o.forum_name[:80])
 
 class UserImporter(BasePhpBBImporter):
     def get_queryset(self):
@@ -92,8 +94,9 @@ class CategoryImporter(BasePhpBBImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Category.objects.filter(name__icontains=o.forum_name).exists():
-            Category(name=o.forum_name).save()
+        forumName = self._get_forumName(o)
+        if not Category.objects.filter(name__iexact=forumName).exists():
+            Category(name=forumName).save()
 
 
 class ForumImporter(BasePhpBBImporter):
@@ -102,16 +105,17 @@ class ForumImporter(BasePhpBBImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Forum.objects.filter(name__icontains=o.forum_name).exists():
+        forumName = self._get_forumName(o)
+        if not Forum.objects.filter(name__iexact=forumName).exists():
             parent = PhpBBForum.objects.get(pk=o.parent_id)
             try:
-                category = Category.objects.get(name=parent.forum_name)
+                category = Category.objects.get(name=self._get_forumName(parent))
             except Category.DoesNotExist:
                 root = self._find_root(o)
-                category = Category.objects.get(name=root.forum_name)
+                category = Category.objects.get(name=self._get_forumName(root))
 
-            Forum(category=category, description=o.forum_desc,
-                  name=o.forum_name).save()
+            Forum(category=category, description=unicode(o.forum_desc),
+                  name=forumName).save()
 
 
 class TopicImporter(BasePhpBBImporter):
@@ -120,11 +124,17 @@ class TopicImporter(BasePhpBBImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Topic.objects.filter(name__icontains=o.topic_title).exists():
+        if not Topic.objects.filter(name__iexact=o.topic_title).exists():
             try:
-                forum = Forum.objects.get(name__icontains=o.forum.forum_name)
-            except Forum.DoesNotExist:
-                pass
+                forum = Forum.objects.get(name__iexact=self._get_forumName(o.forum))
+            except PhpBBForum.DoesNotExist:
+                try:
+                    forum = Forum.objects.get(name='BlackHole')
+                except Forum.DoesNotExist:
+                    forum = Forum(category=Category.objects.get(pk=1), 
+                                  description='place for topics without forum',
+                                  name='BlackHole')
+                    forum.save()
             author = self._getAuthor(o)
 
             createdtime = datetime.datetime.fromtimestamp(o.topic_time)

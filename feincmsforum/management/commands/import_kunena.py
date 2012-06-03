@@ -48,6 +48,9 @@ class KunenaImporter(BaseImporter):
             return User.objects.filter(username__iexact=name)[0]
         logging.warn('User %s with email %s not found' %(name, email))
         return None
+    
+    def _get_forumName(self, o):
+        return unicode(o.name[:80])
 
 
 class UserImporter(KunenaImporter):
@@ -82,8 +85,9 @@ class CategoryImporter(KunenaImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Category.objects.filter(name__icontains=o.name).exists():
-            Category(name=unicode(o.name)).save()
+        forumName = self._get_forumName(o)
+        if not Category.objects.filter(name__iexact=forumName).exists():
+            Category(name=forumName).save()
 
 
 class ForumImporter(KunenaImporter):
@@ -92,16 +96,17 @@ class ForumImporter(KunenaImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Forum.objects.filter(name__icontains=o.name).exists():
+        forumName = self._get_forumName(o)
+        if not Forum.objects.filter(name__icontains=forumName).exists():
             parent = KunenaCategory.objects.get(pk=o.parent)
             try:
-                category = Category.objects.get(name=parent.name)
+                category = Category.objects.get(name=self._get_forumName(parent))
             except Category.DoesNotExist:
                 root = self._find_root(o)
-                category = Category.objects.get(name=root.name)
+                category = Category.objects.get(name=self._get_forumName(root))
 
             Forum(category=category, description=unicode(o.description),
-                  name=unicode(o.name)).save()
+                  name=forumName).save()
 
 
 class PostImporter(KunenaImporter):
@@ -128,7 +133,16 @@ class PostImporter(KunenaImporter):
             return Topic.objects.get(name=topic.subject)
         except Topic.DoesNotExist:
             kunenacat = KunenaCategory.objects.get(pk=o.catid)
-            forum = Forum.objects.get(name=kunenacat.name)
+            try:
+                forum = Forum.objects.get(name=self._get_forumName(kunenacat))
+            except Forum.DoesNotExist:
+                try:
+                    forum = Forum.objects.get(name='BlackHole')
+                except Forum.DoesNotExist:
+                    forum = Forum(category=Category.objects.get(pk=1), 
+                                  description='place for topics without forum',
+                                  name='BlackHole')
+                    forum.save()
             author = self._get_user(topic.email, topic.name)
 
             createdtime = datetime.datetime.fromtimestamp(topic.time)
