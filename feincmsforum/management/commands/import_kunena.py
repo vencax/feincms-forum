@@ -8,6 +8,7 @@ import logging
 from .export_models.kunena import KunenaCategory, KunenaPost, KunenaUser, KunenaPostText
 from .import_util import BaseImporter, prepareImport
 import re
+from django.conf import settings
 
 class Command(BaseCommand):
     """
@@ -46,7 +47,6 @@ class KunenaImporter(BaseImporter):
             return User.objects.get(email=email)
         if User.objects.filter(username__iexact=name).exists():
             return User.objects.filter(username__iexact=name)[0]
-        logging.warn('User %s with email %s not found' %(name, email))
         return None
     
     def _get_forumName(self, o):
@@ -64,9 +64,9 @@ class UserImporter(KunenaImporter):
 
     @commit_on_success
     def processObject(self, o):
-        try:
-            u = User.objects.get(email__iexact=o.email)
-        except User.DoesNotExist:
+        u = self._get_user(o.email, o.username)
+        
+        if u == None:
             nameparts = unicode(o.name).split(' ')
             if len(nameparts) == 1:
                 first_name, last_name = nameparts[0], ''

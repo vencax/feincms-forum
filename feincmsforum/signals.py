@@ -1,6 +1,7 @@
 from datetime import datetime
 from subscription import notify_topic_subscribers
 from .models import Post
+from django.conf import settings
 
 def post_saved(instance, **kwargs):
     created = kwargs.get('created')
@@ -12,7 +13,8 @@ def post_saved(instance, **kwargs):
         profile = post.user.forum_profile
         profile.post_count = post.user.posts.count()
         profile.save(force_update=True)
-        notify_topic_subscribers(post)
+        if getattr(settings, 'NOTIFY_SUBSRIBERS', True):
+            notify_topic_subscribers(post)
     topic.save(force_update=True)
 
 def topic_saved(instance, **kwargs):

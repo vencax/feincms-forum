@@ -5,6 +5,7 @@ Created on May 28, 2012
 '''
 from feincmsforum.models import Post, Category, Forum
 import logging
+from django.conf import settings
 
 def prepareImport():
     """
@@ -13,6 +14,7 @@ def prepareImport():
     for f in Post._meta.fields:
         if f.attname == 'created':
             f.auto_now_add = False
+    settings.NOTIFY_SUBSRIBERS = False
             
             
 class BaseImporter(object):
