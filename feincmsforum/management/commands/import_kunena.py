@@ -103,7 +103,10 @@ class ForumImporter(KunenaImporter):
                 category = Category.objects.get(name=self._get_forumName(parent))
             except Category.DoesNotExist:
                 root = self._find_root(o)
-                category = Category.objects.get(name=self._get_forumName(root))
+                try:
+                    category = Category.objects.get(name=self._get_forumName(root))
+                except Category.DoesNotExist:
+                    category = self.blackholeCategory()
 
             Forum(category=category, description=unicode(o.description),
                   name=forumName).save()
@@ -136,13 +139,8 @@ class PostImporter(KunenaImporter):
             try:
                 forum = Forum.objects.get(name=self._get_forumName(kunenacat))
             except Forum.DoesNotExist:
-                try:
-                    forum = Forum.objects.get(name='BlackHole')
-                except Forum.DoesNotExist:
-                    forum = Forum(category=Category.objects.get(pk=1), 
-                                  description='place for topics without forum',
-                                  name='BlackHole')
-                    forum.save()
+                forum = self.blackholeForum()
+                
             author = self._get_user(topic.email, topic.name)
 
             createdtime = datetime.datetime.fromtimestamp(topic.time)

@@ -3,7 +3,7 @@ Created on May 28, 2012
 
 @author: vencax
 '''
-from feincmsforum.models import Post
+from feincmsforum.models import Post, Category, Forum
 import logging
 
 def prepareImport():
@@ -24,3 +24,30 @@ class BaseImporter(object):
                 self.processObject(o)
             except Exception, e:
                 logging.exception(e)
+                
+    def blackholeCategory(self):
+        try:
+            return Category.objects.get(name='BlackHole')
+        except Category.DoesNotExist:
+            cat = Category(name='BlackHole')
+            cat.save()
+            return cat
+        
+    def blackholeForum(self):
+        try:
+            return Forum.objects.get(name='BlackHole')
+        except Forum.DoesNotExist:
+            cat = self.blackholeCategory()
+            forum = Forum(category=cat, 
+                          description='place for topics without forum',
+                          name='BlackHole')
+            forum.save()
+            return forum
+                
+def unicode_fix(s):
+    try:
+        return s.decode('utf-8')
+    except UnicodeDecodeError:
+        return s
+    except UnicodeEncodeError:
+        return s
