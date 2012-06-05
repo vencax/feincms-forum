@@ -3,7 +3,8 @@ Created on May 28, 2012
 
 @author: vencax
 '''
-from feincmsforum.models import Post, Category, Forum
+from feincmsforum.models import Post, Category, Forum, CategoryTranslation,\
+    ForumTranslation
 import logging
 from django.conf import settings
 
@@ -29,22 +30,35 @@ class BaseImporter(object):
                 
     def blackholeCategory(self):
         try:
-            return Category.objects.get(name='BlackHole')
+            return Category.objects.get(translations__title='BlackHole')
         except Category.DoesNotExist:
-            cat = Category(name='BlackHole')
+            cat = Category()
             cat.save()
+            cat.translations.add(CategoryTranslation(title='BlackHole'))
             return cat
         
     def blackholeForum(self):
         try:
-            return Forum.objects.get(name='BlackHole')
+            return Forum.objects.get(translations__title='BlackHole')
         except Forum.DoesNotExist:
             cat = self.blackholeCategory()
-            forum = Forum(category=cat, 
-                          description='place for topics without forum',
-                          name='BlackHole')
+            forum = Forum(category=cat)
             forum.save()
+            forum.translations.add(ForumTranslation(title='BlackHole', 
+                          description='place for topics without forum'))
             return forum
+        
+    def _saveForum(self, category, title, desc):
+        f = Forum(category=category)
+        f.save()
+        f.translations.add(ForumTranslation(description=desc, title=title))
+        return f
+
+    def _saveCategory(self, title, desc):
+        c = Category()
+        c.save()
+        c.translations.add(CategoryTranslation(title=title, description=desc))
+        return c
                 
 def unicode_fix(s):
     try:

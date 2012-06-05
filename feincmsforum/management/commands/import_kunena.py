@@ -86,8 +86,8 @@ class CategoryImporter(KunenaImporter):
     @commit_on_success
     def processObject(self, o):
         forumName = self._get_forumName(o)
-        if not Category.objects.filter(name__iexact=forumName).exists():
-            Category(name=forumName).save()
+        if not Category.objects.filter(translations__title__iexact=forumName).exists():
+            self._saveCategory(forumName, '')
 
 
 class ForumImporter(KunenaImporter):
@@ -97,20 +97,18 @@ class ForumImporter(KunenaImporter):
     @commit_on_success
     def processObject(self, o):
         forumName = self._get_forumName(o)
-        if not Forum.objects.filter(name__icontains=forumName).exists():
+        if not Forum.objects.filter(translations__title__iexact=forumName).exists():
             parent = KunenaCategory.objects.get(pk=o.parent)
             try:
-                category = Category.objects.get(name=self._get_forumName(parent))
+                category = Category.objects.get(translations__title=self._get_forumName(parent))
             except Category.DoesNotExist:
                 root = self._find_root(o)
                 try:
-                    category = Category.objects.get(name=self._get_forumName(root))
+                    category = Category.objects.get(translations__title=self._get_forumName(root))
                 except Category.DoesNotExist:
                     category = self.blackholeCategory()
-
-            Forum(category=category, description=unicode(o.description),
-                  name=forumName).save()
-
+                    
+            self._saveForum(category, forumName, unicode(o.description))
 
 class PostImporter(KunenaImporter):
     _smileRegexps = {r'<img class="cometchat_smiley" height="[0-9]{1,}" width="[0-9]{1,}" src="[^\"]" alt=":-\)">' : ':)' }
@@ -137,7 +135,7 @@ class PostImporter(KunenaImporter):
         except Topic.DoesNotExist:
             kunenacat = KunenaCategory.objects.get(pk=o.catid)
             try:
-                forum = Forum.objects.get(name=self._get_forumName(kunenacat))
+                forum = Forum.objects.get(translations__title=self._get_forumName(kunenacat))
             except Forum.DoesNotExist:
                 forum = self.blackholeForum()
                 

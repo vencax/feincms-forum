@@ -9,7 +9,8 @@ import logging
 
 from .export_models.phpbb import PhpBBForum,\
     PhpBBTopic, PhpBBPost, PhpBBGroup
-from feincmsforum.models import Category, Forum, Topic, Post, Profile
+from feincmsforum.models import Category, Forum, Topic, Post, Profile,\
+    ForumTranslation, CategoryTranslation
 from .import_util import BaseImporter, prepareImport
 import re
 import leaf
@@ -60,7 +61,7 @@ class BasePhpBBImporter(BaseImporter):
         while curr.parent_id != 0:
             curr = self._get_parent(curr)
         return curr
-    
+
     def _get_forumName(self, o):
         return unicode(o.forum_name[:80])
 
@@ -95,8 +96,8 @@ class CategoryImporter(BasePhpBBImporter):
     @commit_on_success
     def processObject(self, o):
         forumName = self._get_forumName(o)
-        if not Category.objects.filter(name__iexact=forumName).exists():
-            Category(name=forumName).save()
+        if not Category.objects.filter(translations__title__iexact=forumName).exists():
+            self._saveCategory(forumName, '')
 
 
 class ForumImporter(BasePhpBBImporter):
@@ -106,16 +107,18 @@ class ForumImporter(BasePhpBBImporter):
     @commit_on_success
     def processObject(self, o):
         forumName = self._get_forumName(o)
-        if not Forum.objects.filter(name__iexact=forumName).exists():
+        if not Forum.objects.filter(translations__title__iexact=forumName).exists():
             parent = PhpBBForum.objects.get(pk=o.parent_id)
             try:
-                category = Category.objects.get(name=self._get_forumName(parent))
+                category = Category.objects.get(translations__title=self._get_forumName(parent))
             except Category.DoesNotExist:
                 root = self._find_root(o)
-                category = Category.objects.get(name=self._get_forumName(root))
+                try:
+                    category = Category.objects.get(translations__title=self._get_forumName(root))
+                except Category.DoesNotExist:
+                    category = self.blackholeCategory()
 
-            Forum(category=category, description=unicode(o.forum_desc),
-                  name=forumName).save()
+            self._saveForum(category, forumName, unicode(o.forum_desc))
 
 
 class TopicImporter(BasePhpBBImporter):
@@ -126,15 +129,10 @@ class TopicImporter(BasePhpBBImporter):
     def processObject(self, o):
         if not Topic.objects.filter(name__iexact=o.topic_title).exists():
             try:
-                forum = Forum.objects.get(name__iexact=self._get_forumName(o.forum))
+                forum = Forum.objects.get(translations__title__iexact=self._get_forumName(o.forum))
             except PhpBBForum.DoesNotExist:
-                try:
-                    forum = Forum.objects.get(name='BlackHole')
-                except Forum.DoesNotExist:
-                    forum = Forum(category=Category.objects.get(pk=1), 
-                                  description='place for topics without forum',
-                                  name='BlackHole')
-                    forum.save()
+                forum = self.blackholeForum()
+
             author = self._getAuthor(o)
 
             createdtime = datetime.datetime.fromtimestamp(o.topic_time)
@@ -151,10 +149,10 @@ class PostImporter(BasePhpBBImporter):
         _smileReg % 'icon_mrgreen' : ':rolleyes:',
         _smileReg % 'icon_lol' : ':lol:',
         _smileReg % 'icon_e_wink' : ';)',
-        _smileReg % 'icon_cry' : ':(',     
+        _smileReg % 'icon_cry' : ':(',
 #        r'&quot;' : '"'
     }
-    
+
     def doCheck(self):
         for p in Post.objects.all():
             if p.body.find('SMILIES_PATH') != -1:
@@ -173,7 +171,7 @@ class PostImporter(BasePhpBBImporter):
                 topic = Topic.objects.get(name=unicode(o.topic.topic_title))
             except Topic.DoesNotExist:
                 topic = Topic.objects.get(name__icontains=unicode(o.topic.topic_title))
-            
+
             text = unicode(leaf.parse(self._process_text(unicode(o.post_text))))
 
             Post(topic=topic, body=text, user_ip=o.poster_ip,
