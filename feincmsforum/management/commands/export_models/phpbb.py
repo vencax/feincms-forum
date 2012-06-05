@@ -15,6 +15,7 @@ class PhpBBUser(models.Model):
     user_id = models.IntegerField(primary_key=True)
     user_email = models.EmailField()
     username_clean = models.CharField()
+    user_password = models.CharField()
 
     def __unicode__(self):
         return 'PhpBBUser ' + unicode_fix(self.username_clean)

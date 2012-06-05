@@ -9,9 +9,8 @@ import logging
 
 from .export_models.phpbb import PhpBBForum,\
     PhpBBTopic, PhpBBPost, PhpBBGroup
-from feincmsforum.models import Category, Forum, Topic, Post, Profile,\
-    ForumTranslation, CategoryTranslation
-from .import_util import BaseImporter, prepareImport
+from feincmsforum.models import Category, Forum, Topic, Post, Profile
+from .import_util import BaseImporter, prepareImport, unicode_fix
 import re
 import leaf
 
@@ -26,7 +25,7 @@ class Command(BaseCommand):
     help = u'Imports phpbb sql dump'
 
     def handle(self, *args, **options):
-        logging.basicConfig(level = logging.INFO)
+        logging.basicConfig(level = logging.INFO, **options)
         prepareImport()
         UserImporter().doImport()
         CategoryImporter().doImport()
@@ -63,7 +62,8 @@ class BasePhpBBImporter(BaseImporter):
         return curr
 
     def _get_forumName(self, o):
-        return unicode(o.forum_name[:80])
+        return unicode_fix(o.forum_name[:80])
+
 
 class UserImporter(BasePhpBBImporter):
     def get_queryset(self):
@@ -76,15 +76,15 @@ class UserImporter(BasePhpBBImporter):
 
     @commit_on_success
     def processObject(self, o):
-        try:
-            u = User.objects.get(email__iexact=o.user_email)
-        except User.DoesNotExist:
-            try:
-                u = User.objects.get(username__iexact=o.username_clean)
-            except User.DoesNotExist:
-                u = User(username=unicode(o.username_clean),
-                         email=o.user_email)
-                u.save()
+        uname = unicode_fix(o.username_clean)
+        u = self._get_user(o.user_email, uname)
+
+        if u == None:
+            u = User(username=uname,
+                     email=o.user_email,
+                     password=o.user_password)
+            u.save()
+
         if not Profile.objects.filter(user__exact=u).exists():
             Profile(user=u).save()
 

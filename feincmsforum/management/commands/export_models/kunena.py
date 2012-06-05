@@ -14,6 +14,7 @@ class KunenaUser(models.Model):
     email = models.EmailField()
     username = models.CharField()
     name = models.CharField()
+    password = models.CharField()
 
     def __unicode__(self): return 'KunenaUser %s' % self.username
 

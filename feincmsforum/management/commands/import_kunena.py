@@ -4,11 +4,11 @@ from django.db.transaction import commit_on_success
 from feincmsforum.models import Category, Forum, Topic, Post, Profile
 import datetime
 import logging
+import re
 
 from .export_models.kunena import KunenaCategory, KunenaPost, KunenaUser, KunenaPostText
 from .import_util import BaseImporter, prepareImport
-import re
-from django.conf import settings
+
 
 class Command(BaseCommand):
     """
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = u'Imports kunena forum sql dump'
 
     def handle(self, *args, **options):
-        logging.basicConfig(level = logging.INFO)
+        logging.basicConfig(level = logging.INFO, **options)
         prepareImport()
         UserImporter().doImport()
         CategoryImporter().doImport()
@@ -41,13 +41,6 @@ class KunenaImporter(BaseImporter):
         while curr.parent != 0:
             curr = self._get_parent(curr)
         return curr
-
-    def _get_user(self, email, name):
-        if User.objects.filter(email__exact=email).exists():
-            return User.objects.get(email=email)
-        if User.objects.filter(username__iexact=name).exists():
-            return User.objects.filter(username__iexact=name)[0]
-        return None
     
     def _get_forumName(self, o):
         return unicode(o.name[:80])
@@ -73,7 +66,7 @@ class UserImporter(KunenaImporter):
             else:
                 first_name, last_name = nameparts[0], ' '.join(nameparts[1:])
             u = User(username=unicode(o.username), first_name=first_name,
-                 last_name=last_name, email=o.email)
+                 last_name=last_name, email=o.email, password=o.password)
             u.save()
         if not Profile.objects.filter(user__exact=u).exists():
             Profile(user=u).save()

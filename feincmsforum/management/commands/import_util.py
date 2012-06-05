@@ -7,6 +7,7 @@ from feincmsforum.models import Post, Category, Forum, CategoryTranslation,\
     ForumTranslation
 import logging
 from django.conf import settings
+from django.contrib.auth.models import User
 
 def prepareImport():
     """
@@ -59,6 +60,13 @@ class BaseImporter(object):
         c.save()
         c.translations.add(CategoryTranslation(title=title, description=desc))
         return c
+    
+    def _get_user(self, email, name):
+        if User.objects.filter(email__iexact=email).exists():
+            return User.objects.get(email=email)
+        if User.objects.filter(username__iexact=name).exists():
+            return User.objects.filter(username__iexact=name)
+        return None
                 
 def unicode_fix(s):
     try:
