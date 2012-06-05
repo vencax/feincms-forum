@@ -28,7 +28,7 @@ class IndexView(FeincmsForumMixin, TemplateView):
     template_name = 'feincmsforum/index.html'
 
     def get(self, request, *args, **kwargs):
-        catId = kwargs.get('cat_id', None)
+        catSlug = kwargs.get('slug', None)
         users_cached = cache.get('users_online', {})
         users_online = users_cached and User.objects.filter(id__in = users_cached.keys()) or []
         guests_cached = cache.get('guests_online', {})
@@ -43,8 +43,9 @@ class IndexView(FeincmsForumMixin, TemplateView):
         _forums = Forum.objects.filter(
                 Q(category__groups__in=user_groups) | \
                 Q(category__groups__isnull=True))
-        if catId:
-            _forums = _forums.filter(category__id__in=[int(catId)])
+        if catSlug:
+            cat = Category.objects.get(translations__slug=catSlug)
+            _forums = _forums.filter(category__id__in=[cat.id])
         _forums = _forums.select_related('last_post__topic', 'last_post__user', 
                                          'category')
         for forum in _forums:
@@ -53,7 +54,7 @@ class IndexView(FeincmsForumMixin, TemplateView):
             cat['forums'].append(forum)
             forums[forum.id] = forum
 
-        cmpdef = lambda a, b: cmp(a['cat'].position, b['cat'].position)
+        cmpdef = lambda a, b: cmp(a['cat'].ordering, b['cat'].ordering)
         cats = sorted(cats.values(), cmpdef)
 
         return self.render_to_response({
@@ -99,7 +100,7 @@ class ShowForumView(FeincmsForumMixin, ListView):
     paginate_by = getattr(settings, 'FORUM_PAGE_SIZE', 15)
 
     def get_queryset(self):
-        self.forum = get_object_or_404(Forum, pk=self.kwargs['forum_id'])
+        self.forum = get_object_or_404(Forum, translations__slug=self.kwargs['slug'])
         if not self.forum.category.has_access(self.request.user):
             return HttpResponseForbidden()
         return self.forum.topics.order_by('-sticky', '-updated').select_related()
@@ -171,8 +172,8 @@ class ShowTopicView(FeincmsForumMixin, ListView):
         return context
 
 @transaction.commit_on_success
-def create_topic(request, forum_id):
-    forum = get_object_or_404(Forum, pk=forum_id)
+def create_topic(request, slug):
+    forum = get_object_or_404(Forum, translations__slug=slug)
     if not forum.category.has_access(request.user):
         return HttpResponseForbidden()
     if request.method == 'GET':
@@ -200,11 +201,13 @@ def report(request, post_id):
         return HttpResponseRedirect(post.get_absolute_url())
     return 'feincmsforum/report.html', {'form':form}
 
+
 @login_required
 def markread(request):
     PostTracking.objects.filter(user__id=request.user.id).\
         update(last_read=datetime.now(), topics=None)
     return HttpResponseRedirect(reverse('forum_index:index'))
+
 
 @login_required
 @transaction.commit_on_success
@@ -292,9 +295,8 @@ def edit_post(request, post_id):
 def prepare_move_topic(request, topic_id):
     topic = get_object_or_404(Topic, pk=topic_id)
     if forum_moderated_by(topic, request.user):
-        allforums = Forum.objects.all().exclude(id__in=[topic.forum_id]).\
-            values_list('id', 'name')
-        data = ['%i#%s' % (fId, name) for fId, name in allforums]
+        allforums = Forum.objects.all().exclude(id__in=[topic.forum_id])
+        data = ['%i#%s' % (f.id, f.translation.title) for f in allforums]
         return JsonResponse({'stat' : 'OK', 'data' : data})
     else:
         return JsonResponse({'stat' : 'FAIL',

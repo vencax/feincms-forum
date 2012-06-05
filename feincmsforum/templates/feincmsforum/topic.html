@@ -10,11 +10,11 @@
 
 {% block breadcrumbs %}
 <li><a href="{{feincms_page.get_absolute_url}}">{{feincms_page.title}}</a></li>
-<li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.name }}</a></li>
+<li>&raquo; <a href="{{ topic.forum.get_absolute_url }}">{{ topic.forum.translation.title }}</a></li>
 <li class="selected">&raquo; {{ topic.name }}</li>
 {% endblock %}
 
-{% block title %}{{ topic.forum.name }} / {{ topic.name }}{% endblock %}
+{% block title %}{{ topic.forum.translation.title }} / {{ topic.name }}{% endblock %}
 {% block keywords %}{{ topic.name }}{% endblock %}
 {% block description %}{{ topic.posts.0 }}body_html may not be NULL{% endblock %}
 

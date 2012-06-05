@@ -8,9 +8,9 @@ urlpatterns = patterns('',
 
     # Forum
     url('^$', forum_views.IndexView.as_view(), name='forum_index'),
-    url('^cat_(?P<cat_id>\d+)/$', forum_views.IndexView.as_view(), 
+    url('^cat-(?P<slug>[-\w]+)/$', forum_views.IndexView.as_view(), 
         name='forum_category'),
-    url('^(?P<forum_id>\d+)/$', forum_views.ShowForumView.as_view(), 
+    url('^forum-(?P<slug>[-\w]+)/$', forum_views.ShowForumView.as_view(), 
         name='forum_forum'),
     url('^report/(?P<post_id>\d+)/$', forum_views.report, name='forum_report'),
     url('^mailto/(?P<username>.*)/$', login_required(forum_views.MailToView.as_view()),
@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     # Topic
     url('^topic/(?P<topic_id>\d+)/$', forum_views.ShowTopicView.as_view(), 
         name='forum_topic'),
-    url('^(?P<forum_id>\d+)/add/$', forum_views.create_topic, 
+    url('^forum-(?P<slug>[-\w]+)/add/$', forum_views.create_topic, 
         name='forum_add_topic'),
 
     # Post

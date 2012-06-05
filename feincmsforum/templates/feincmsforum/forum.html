@@ -4,21 +4,21 @@
 
 {% block breadcrumbs %}
 <li><a href="{{feincms_page.get_absolute_url}}">{{feincms_page.title}}</a></li>
-<li class="selected">&raquo; {{ forum.name }}</li>
+<li class="selected">&raquo; {{ forum.translation.title }}</li>
 {% endblock %}
 
-{% block title %}{{ forum.name }}{% endblock %}
-{% block keywords %}{{ forum.name }}{% endblock %}
-{% block description %}{{ forum.description }}{% endblock %}
+{% block title %}{{ forum.translation.title }}{% endblock %}
+{% block keywords %}{{ forum.translation.title }}{% endblock %}
+{% block description %}{{ forum.translation.description }}{% endblock %}
 
 {% block bbcontent %}
 
-<h1>{{ forum.name }}</h1>
+<h1>{{ forum.translation.name }}</h1>
 
 <ul class="rhorizList pagetools">
 	<li><a href="{% url forum_forum_feed forum.id %}" class="icon rss"></a></li>
 	{% if user.is_authenticated %}
-	{% app_reverse "forum_add_topic" "feincmsforum.urls" forum.id as addTopicURL %}
+	{% app_reverse "forum_add_topic" "feincmsforum.urls" forum.translation.slug as addTopicURL %}
 	<li class="submit"><a href="{{ addTopicURL }}">
 		{% trans "New topic" %}
 	</a></li>

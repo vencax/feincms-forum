@@ -1,18 +1,18 @@
 {% extends 'feincmsforum/base.html' %}
-{% load forum_extras fragment_tags %}
+{% load forum_extras %}
 {% load i18n %}
 
-{% block bbcontent %}
-
-{% fragment request "extrabreadcrumbs" %}
-<li>&raquo; <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a></li>
-<li class="selected">&raquo; {% trans "New topic" %}</li>
-{% endfragment %}
-
-{% fragment request "extrahead" %}
+{% block extrahead %}
 {{ form.media }}
 <script type="text/javascript" src="{{ STATIC_URL }}feincmsforum/js/board.js"></script>
-{% endfragment %}
+{% endblock %}
+
+{% block readcrumbs %}
+<li>&raquo; <a href="{{ forum.translation.get_absolute_url }}">{{ forum.name }}</a></li>
+<li class="selected">&raquo; {% trans "New topic" %}</li>
+{% endblock %}
+
+{% block bbcontent %}
 
 <h2>{% trans "New topic" %}</h2>
 

@@ -2,13 +2,24 @@
 from django.contrib import admin
 
 from .models import Category, Forum, Topic, Post, Profile, Ban
+from feincms.translations import admin_translationinline
+from .models import CategoryTranslation, ForumTranslation
+
+CategoryTranslationInline = admin_translationinline(CategoryTranslation, 
+    prepopulated_fields={'slug': ('title',)})
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'position', 'forum_count']
+    inlines = [CategoryTranslationInline]
+    list_display = ['__unicode__',]
+    search_fields = ['translations__title']
+
+ForumTranslationInline = admin_translationinline(ForumTranslation, 
+    prepopulated_fields={'slug': ('title',)})
 
 class ForumAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'position', 'topic_count']
-    raw_id_fields = ['moderators']
+    inlines = [ForumTranslationInline]
+    list_display = ['__unicode__',]
+    search_fields = ['translations__title']
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['name', 'forum', 'created', 'head', 'post_count']

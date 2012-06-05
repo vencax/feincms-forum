@@ -8,30 +8,30 @@ from django.db.models.signals import post_save, post_delete
 
 from fields import AutoOneToOneField, JSONField, BBCodeTextField
 from feincmsforum.util import convert_text_to_html
+from django.template.defaultfilters import slugify
+from feincms import translations
 
 if 'south' in settings.INSTALLED_APPS:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ['^feincmsforum\.fields\.AutoOneToOneField',
                                  '^feincmsforum\.fields\.JSONField',
                                  '^feincmsforum\.fields\.ExtendedImageField',
-                                 '^ckeditor\.fields\.RichTextField',])
+                                 '^feincmsforum\.fields\.BBCodeTextField',])
     
 
-class Category(models.Model):
-    name = models.CharField(_('Name'), max_length=80)
+class Category(models.Model, translations.TranslatedObjectMixin):
     groups = models.ManyToManyField(Group,blank=True, null=True, 
                                     verbose_name=_('Groups'), 
                                     help_text=_('Only users from these groups can see this category'))
-    position = models.IntegerField(_('Position'), blank=True, default=0)
+    
+    ordering = models.SmallIntegerField(_('ordering'), default=0)
 
     class Meta:
-        ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
-
-    def __unicode__(self):
-        return self.name
-
+        
+    objects = translations.TranslatedObjectManager()
+    
     def forum_count(self):
         return self.forums.all().count()
 
@@ -52,27 +52,37 @@ class Category(models.Model):
                 return False
         return True
 
-try:
-    from feincms.module.page.extensions.navigation import NavigationExtension, PagePretender
-    from feincms.content.application.models import app_reverse
-    class ForumCategoriesNavigationExtension(NavigationExtension):
-        name = _('forum categories')
-    
-        def children(self, page, **kwargs):
-            for category in Category.objects.all():
-                yield PagePretender(
-                    title=category.name,
-                    url=app_reverse('forum_category', 'feincmsforum.urls', kwargs={
-                        'cat_id': category.id,
-                    }))
-except:
-    pass
+class CategoryTranslation(translations.Translation(Category)):
+    title = models.CharField(_('category title'), max_length=100)
+    slug = models.SlugField(_('slug'), unique=True)
+    description = models.CharField(_('description'), max_length=250, blank=True)
 
-class Forum(models.Model):
-    category = models.ForeignKey(Category, related_name='forums', verbose_name=_('Category'))
-    name = models.CharField(_('Name'), max_length=80)
+    class Meta:
+        verbose_name = _('category translation')
+        verbose_name_plural = _('category translations')
+        ordering = ['title']
+
+    def __unicode__(self):
+        return self.title
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('forum_category', (), {
+            'slug': self.slug,
+            })
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        super(CategoryTranslation, self).save(*args, **kwargs)
+        
+# -----------------------------------------------------------------------------
+
+class Forum(models.Model, translations.TranslatedObjectMixin):
+    category = models.ForeignKey(Category, related_name='forums', 
+                                 verbose_name=_('Category'))
     position = models.IntegerField(_('Position'), blank=True, default=0)
-    description = models.TextField(_('Description'), blank=True, default='')
     moderators = models.ManyToManyField(User, blank=True, null=True, verbose_name=_('Moderators'))
     updated = models.DateTimeField(_('Updated'), auto_now=True)
 
@@ -80,9 +90,8 @@ class Forum(models.Model):
         ordering = ['position']
         verbose_name = _('Forum')
         verbose_name_plural = _('Forums')
-
-    def __unicode__(self):
-        return self.name
+        
+    objects = translations.TranslatedObjectManager()
       
     def _get_last_post(self):
         def _get_last_post_inner():
@@ -104,14 +113,37 @@ class Forum(models.Model):
         return _get_cached_prop_val(self, '_post_count', _get_post_count_inner)
     post_count = property(_get_post_count)
 
-    @models.permalink
-    def get_absolute_url(self):
-        return ('forum_forum', (self.id,))
-
     @property
     def posts(self):
         return Post.objects.filter(topic__forum__id=self.id).select_related()
-      
+
+
+class ForumTranslation(translations.Translation(Forum)):
+    title = models.CharField(_('category title'), max_length=100)
+    slug = models.SlugField(_('slug'), unique=True)
+    description = models.CharField(_('description'), max_length=250, blank=True)
+
+    class Meta:
+        verbose_name = _('category translation')
+        verbose_name_plural = _('category translations')
+        ordering = ['title']
+
+    def __unicode__(self):
+        return self.title
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('forum_forum', (), {
+            'slug': self.slug,
+            })
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        super(ForumTranslation, self).save(*args, **kwargs)
+        
+# -----------------------------------------------------------------------------      
 
 class Topic(models.Model):
     forum = models.ForeignKey(Forum, related_name='topics', verbose_name=_('Forum'))
