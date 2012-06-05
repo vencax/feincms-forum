@@ -2,8 +2,8 @@
 {% load forum_extras %}
 {% load i18n %}
 
-{% block breadcrumb %}{{ block.super }}
-<li>&raquo; <a href="{% url forum_index %}">{% trans 'Forums' %}</a></li>
+{% block breadcrumbs %}
+<li><a href="{{feincms_page.get_absolute_url}}">{{feincms_page.title}}</a></li>
 <li class="selected">&raquo; {% trans "Send e-mail to" %} {{ mailto }}</li>
 {% endblock %}
 
@@ -31,7 +31,4 @@
 	</form>
 </div>
 
-{% endblock %}
-
-{% block controls %}
 {% endblock %}
