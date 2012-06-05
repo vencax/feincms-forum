@@ -73,7 +73,7 @@ class CategoryTranslation(translations.Translation(Category)):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title)[:50]
 
         super(CategoryTranslation, self).save(*args, **kwargs)
         
@@ -139,7 +139,7 @@ class ForumTranslation(translations.Translation(Forum)):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title)[:50]
 
         super(ForumTranslation, self).save(*args, **kwargs)
         
