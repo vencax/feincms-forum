@@ -154,8 +154,10 @@ class PostImporter(BasePhpBBImporter):
         _smileReg % 'icon_lol' : ':lol:',
         _smileReg % 'icon_e_wink' : ';)',
         _smileReg % 'icon_cry' : ':(',
+        _smileReg % 'icon_rolleyes' : ':rolleyes:',
 #        r'&quot;' : '"'
     }
+    
 
     def doCheck(self):
         for p in Post.objects.all():
@@ -187,4 +189,30 @@ class PostImporter(BasePhpBBImporter):
         text = re.sub(self._commentRe, '', text)
         for r, repl in self._regexps.items():
             text = re.sub(r, repl, text)
+        text = self._fixBB(text)
         return text
+    
+    _badBB = ['i', 'code', 'b']
+    
+    def _fixBB(self, text):
+        """
+        Fixes the strange references in BB codes like:
+        [b:jfkdjfks]something bold[/b:jfkdjfks]
+        """
+        for i in self._badBB:
+            text = re.sub('\[%s:[^\]]{1,}\]' % i, '[%s]' % i, text)
+            text = re.sub('\[/%s:[^\]]{1,}\]' % i, '[/%s]' % i, text)
+
+        def repl(matchObj):
+            return '[url=%s]' % matchObj.group('url')
+        
+        text = re.sub(r'\[url=(?P<url>[^:\]]{1,}):[^\]]{1,}\]', repl, text)
+        text = re.sub('\[/url:[^\]]{1,}\]', '[/url]', text)
+        
+        def replQuote(matchObj):
+            return '[quote=%s]' % matchObj.group('url')
+        text = re.sub(r'\[quote=(&quot;)?(?P<url>[^:&]{1,})(&quot;)?:[^\]]{1,}\]', 
+                      replQuote, text)
+        text = re.sub('\[/quote:[^\]]{1,}\]', '[/quote]', text)
+        return text
+        

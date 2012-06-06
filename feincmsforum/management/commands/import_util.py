@@ -69,6 +69,12 @@ class BaseImporter(object):
         return None
                 
 def unicode_fix(s):
+    """
+    This shall return unicode string in any situation.
+    MySQL which is mostly used with phpBB forum stores
+    posts in utf8_bin coding which is not supported by
+    django and thus decode shall be performed first.
+    """
     try:
         return s.decode('utf-8')
     except UnicodeDecodeError:
