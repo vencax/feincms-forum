@@ -65,7 +65,7 @@ class BaseImporter(object):
         if User.objects.filter(email__iexact=email).exists():
             return User.objects.get(email=email)
         if User.objects.filter(username__iexact=name).exists():
-            return User.objects.filter(username__iexact=name)
+            return User.objects.get(username__iexact=name)
         return None
                 
 def unicode_fix(s):
@@ -75,3 +75,23 @@ def unicode_fix(s):
         return s
     except UnicodeEncodeError:
         return s
+    
+def bbcode_formatter(element, childrens, site):
+    if element.tag == 'br':
+        return '\n'
+    if element.tag == 'a':
+        return u"[url={link}]{text}[/url]".format(site=site, link=element.href, text=childrens)
+    if element.tag == 'img':
+        return u"[img={link}]{text}[/img]".format(link=element.src, text=childrens)
+    if element.tag in ['b', 'strong']:
+        return u"[b]{text}[/b]".format(text=childrens)
+    if element.tag in ['em', 'i']:
+        return u"[i]{text}[/i]".format(text=childrens)
+    if element.tag in ['del', 's']:
+        return u"[s]{text}[/s]".format(text=childrens)
+    if element.tag == 'u':
+        return u"[u]{text}[/u]".format(text=childrens)
+    if element.tag == 'title':
+        return u""
+    if childrens:
+        return childrens

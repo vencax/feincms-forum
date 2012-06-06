@@ -80,6 +80,7 @@ class PhpBBPost(models.Model):
     poster_ip = models.IPAddressField()
     post_time = models.DateTimeField()
     post_text = models.TextField()
+    bbcode_bitfield = models.CharField()
 
     def __unicode__(self):
         return 'PhpBBPost %s' % self.post_id

@@ -6,13 +6,15 @@ from django.contrib.auth.models import User
 from django.db.transaction import commit_on_success
 import datetime
 import logging
+import re
+import leaf
 
 from .export_models.phpbb import PhpBBForum,\
     PhpBBTopic, PhpBBPost, PhpBBGroup
 from feincmsforum.models import Category, Forum, Topic, Post, Profile
-from .import_util import BaseImporter, prepareImport, unicode_fix
-import re
-import leaf
+from .import_util import BaseImporter, prepareImport, unicode_fix, bbcode_formatter
+from django.conf import settings
+
 
 
 class Command(BaseCommand):
@@ -140,6 +142,8 @@ class TopicImporter(BasePhpBBImporter):
                   name=o.topic_title, user=author).save()
 
 class PostImporter(BasePhpBBImporter):
+    
+    _originalAddress = getattr(settings, 'ORIG_SITE_ADDRESS', '')
 
     _commentRe = re.compile(r'<!-- [^ ]{1,} -->')
     _smileReg = r'<img src="{SMILIES_PATH}/%s.gif" alt="[^\"]{1,}" title="[^\"]{1,}" />'
@@ -164,15 +168,17 @@ class PostImporter(BasePhpBBImporter):
 
     @commit_on_success
     def processObject(self, o):
-        if not Post.objects.filter(body__iexact=o.post_text).exists():
+        if not Post.objects.filter(body__iexact=unicode_fix(o.post_text)).exists():
             author = self._getAuthor(o, o.poster)
             created = datetime.datetime.fromtimestamp(o.post_time)
             try:
-                topic = Topic.objects.get(name=unicode(o.topic.topic_title))
+                topic = Topic.objects.get(name=unicode_fix(o.topic.topic_title))
             except Topic.DoesNotExist:
-                topic = Topic.objects.get(name__icontains=unicode(o.topic.topic_title))
+                topic = Topic.objects.get(name__icontains=unicode_fix(o.topic.topic_title))
 
-            text = unicode(leaf.parse(self._process_text(unicode(o.post_text))))
+            text = self._process_text(unicode_fix(o.post_text))
+            doc = leaf.parse(text)
+            text = doc.parse(bbcode_formatter, self._originalAddress)
 
             Post(topic=topic, body=text, user_ip=o.poster_ip,
                  user=author, created=created).save()
