@@ -1,41 +1,79 @@
 Introduction
 ==============
 
-Vxkforum is clone of djangoBB app which aims to be 'I know everithing' application. 
-I needed only forum functionality that can be easily integrated into existing
-django site. I tried to strip the djangoBB down and wanted to push the changes to
-original authors but found that original code is tightly coupled with the whole
-functionality so I decided to rework it almost completely.
+feincmsforum is a forum aplication for feincms based webs. It has basic structure
+of models category->forum->topic->post. Maintenance operations are ajaxized.
+There are also import commands implemented that allows migrate your old forum
+content (currently phpbb and kunena forums).
 
 Installation
 ==============
 
 1. Clone the read-only repo
 
-     git clone git@github.com:vencax/django-vxk-forum.git
+     git clone git://github.com/vencax/feincms-forum.git
 
 2. Install the dependencies via PIP.
 
      pip install -r requirements.txt
 
-3. Add vxkforum into your INSTALLED_APPS as well as other dependant apps.
+3. Add feincmsforum into your INSTALLED_APPS as well as other dependent apps.
 
-4. Include vxkforum.urls into your root url conf
+4. Include feincmsforum.urls into your root url conf
 
-     url(r'^forum/', include('vxkforum.urls', namespace='djangobb')),
+     url(r'^forum_service/', include('feincmsforum.service_urls')),
      
-NOTE: DO NOT FORGET to add the "namespace='djangobb'"
+5. Include the mail urlconf into your page models:
+
+	  Page.create_content_type(ApplicationContent, APPLICATIONS=(
+	  ...
+	  ('feincmsforum.urls', 'Forum'),
+	  ...
      
-5. Add template conent processor and middleware in settings
-		
-		TEMPLATE_CONTEXT_PROCESSORS += (
-			'vxkforum.context_processors.forum_settings',
-		)
+6. Alternatively add middleware in settings
 		
 		MIDDLEWARE_CLASSES += (
-			'vxkforum.middleware.LastLoginMiddleware',
+			'feincmsforum.middleware.LastLoginMiddleware',
+			'feincmsforum.middleware.UsersOnline',
 		)
 		
 7. You are done
 
+Import commands
+===============
 
+1. Create sql backup of your current forum OR use your sql server directly from import command
+
+2. Import the backup in case you use the backup into your local DB 
+
+3. Add following into your settings:
+	IMPORT_FORUMS = os.environ.get('IMPORT_FORUMS', False)
+	
+	if IMPORT_FORUMS:
+	    DATABASES['phpbb'] = {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'dbname',
+            'USER': 'uname',
+            'PASSWORD': 'pwd',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+	    DATABASE_ROUTERS = ['feincmsforum.routers.PHPBBRouter']
+	
+	alternatively for kunena forum:
+		if IMPORT_FORUMS:
+		    DATABASES['kunena'] = {
+	            'ENGINE': 'django.db.backends.mysql',
+	            'NAME': 'dbname',
+	            'USER': 'uname',
+	            'PASSWORD': 'pwd',
+	            'HOST': 'localhost',
+	            'PORT': '3306'
+	        }
+		    DATABASE_ROUTERS = ['feincmsforum.routers.KunenaRouter']
+
+4. run export IMPORT_FORUMS=1 in bash at machine that perform import on
+
+5. run the appropriate command. E.g. for phpBB:
+
+	python manage.py import_phpbb
